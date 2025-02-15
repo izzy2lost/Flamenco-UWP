@@ -146,7 +146,8 @@ exit %errorlevel%
 :downloadfile
 if not exist "%~1" (
   echo Downloading %~1 from %~2...
-  curl -L -o "%~1" "%~2" || goto error
+  curl -L -o "%~1" "%~2"
+  if errorlevel 1 exit /B 1
 )
 
 rem based on https://gist.github.com/gsscoder/e22daefaff9b5d8ac16afb070f1a7971
