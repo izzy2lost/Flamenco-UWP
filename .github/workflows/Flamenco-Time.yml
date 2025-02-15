@@ -62,7 +62,7 @@ jobs:
 
       - name: Build util project
         run: |
-          msbuild D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\util.vcxproj /p:Configuration=ReleaseUWP /p:Platform=x64 /p:TargetPlatformVersion=10.0.17763.0
+          msbuild D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\util.vcxproj /p:Configuration=Release /p:Platform=x64 
         shell: pwsh
   
       - name: App Build
