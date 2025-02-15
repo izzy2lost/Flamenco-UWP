@@ -54,7 +54,12 @@ jobs:
 
       - name: Restore NuGet packages  
         run: nuget restore src/duckstation-uwp.sln
-      
+        
+      - name: Generate config.h
+        run: |
+          cd src/dep/libsamplerate
+          cmake .
+          
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
