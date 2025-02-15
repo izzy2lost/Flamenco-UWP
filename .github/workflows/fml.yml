@@ -11,20 +11,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup MSVC environment
-      uses: ilammy/msvc-dev-cmd@v1
-
-    - name: Configure CMake
+    - name: Generate config.h
       run: |
-        mkdir build
-        cd build
-        cmake ../src/dep/libsamplerate -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build libsamplerate
-      run: |
-        cd build
-        cmake --build . --config Release
-
+        cd src/dep/libsamplerate
+        cmake .
+          
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
