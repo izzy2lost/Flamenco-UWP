@@ -1,5 +1,7 @@
 #pragma once
 #include <string_view>
+#include <string>
+using std::string;
 
 namespace GDBProtocol
 {
