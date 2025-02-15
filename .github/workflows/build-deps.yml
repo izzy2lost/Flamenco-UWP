@@ -1,35 +1,132 @@
-name: Build Deps
+name: Build Dependencies (MinGW-w64)
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  create-release:
-    runs-on: windows-2022
+  build:
+    runs-on: windows-latest
+
     steps:
-      # Due to what appears to be MAX_PATH limitations, use a different directory.
-    - name: Clone Repository
-      shell: cmd
-      run: |
-        cd \
-        git clone https://github.com/izzy2lost/Flamenco-UWP.git --depth=1
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Build X64 Dependencies
-      shell: cmd
-      run: |
-        cd \Flamenco-UWP
-        scripts\build-dependencies-windows-x64.bat
+      - name: Install MSYS2 and MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: mingw-w64-x86_64-toolchain ninja curl unzip p7zip
+          update: true
 
+      - name: Set Environment Variables
+        shell: msys2 {0}
+        run: |
+          echo "INSTALLDIR=$GITHUB_WORKSPACE/deps-x64" >> $GITHUB_ENV
+          mkdir -p $INSTALLDIR
 
-    - name: Create Dependencies Archive
-      shell: cmd
-      run: |
-        cd \duckstation-uwp\dep\msvc
-        "C:\Program Files\7-Zip\7z.exe" a "%GITHUB_WORKSPACE%\deps-x64.7z" .\deps-x64
+      - name: Build SDL2
+        shell: msys2 {0}
+        run: |
+          curl -L -o SDL2.zip https://libsdl.org/release/SDL2-2.30.1.zip
+          unzip SDL2.zip
+          cd SDL2-2.30.1
+          cmake -B build -G "Ninja" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
+            -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+            -DCMAKE_INSTALL_PREFIX=$INSTALLDIR
+          cmake --build build --parallel
+          cmake --install build
 
-    - name: Upload Dependencies Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: deps-x64
-        path: deps-x64.7z
-        if-no-files-found: error
+      - name: Build Qt Base
+        shell: msys2 {0}
+        run: |
+          curl -L -o qtbase.zip https://download.qt.io/official_releases/qt/6.6/6.6.2/submodules/qtbase-everywhere-src-6.6.2.zip
+          unzip qtbase.zip
+          cd qtbase-everywhere-src-6.6.2
+          cmake -B build -G "Ninja" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
+            -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
+            -DCMAKE_INSTALL_PREFIX=$INSTALLDIR
+          cmake --build build --parallel
+          cmake --install build
+
+      - name: Build Qt SVG
+        shell: msys2 {0}
+        run: |
+          curl -L -o qtsvg.zip https://download.qt.io/official_releases/qt/6.6/6.6.2/submodules/qtsvg-everywhere-src-6.6.2.zip
+          unzip qtsvg.zip
+          cd qtsvg-everywhere-src-6.6.2
+          mkdir build && cd build
+          cmake -G "Ninja" .. -DCMAKE_INSTALL_PREFIX=$INSTALLDIR
+          cmake --build . --parallel
+          cmake --install .
+
+      - name: Build Qt Image Formats
+        shell: msys2 {0}
+        run: |
+          curl -L -o qtimageformats.zip https://download.qt.io/official_releases/qt/6.6/6.6.2/submodules/qtimageformats-everywhere-src-6.6.2.zip
+          unzip qtimageformats.zip
+          cd qtimageformats-everywhere-src-6.6.2
+          mkdir build && cd build
+          cmake -G "Ninja" .. -DCMAKE_INSTALL_PREFIX=$INSTALLDIR
+          cmake --build . --parallel
+          cmake --install .
+
+      - name: Build Qt Tools
+        shell: msys2 {0}
+        run: |
+          curl -L -o qttools.zip https://download.qt.io/official_releases/qt/6.6/6.6.2/submodules/qttools-everywhere-src-6.6.2.zip
+          unzip qttools.zip
+          cd qttools-everywhere-src-6.6.2
+          mkdir build && cd build
+          cmake -G "Ninja" .. -DCMAKE_INSTALL_PREFIX=$INSTALLDIR \
+            -DFEATURE_assistant=OFF \
+            -DFEATURE_clang=OFF \
+            -DFEATURE_designer=OFF \
+            -DFEATURE_kmap2qmap=OFF \
+            -DFEATURE_pixeltool=OFF \
+            -DFEATURE_pkg_config=OFF \
+            -DFEATURE_qev=OFF \
+            -DFEATURE_qtattributionsscanner=OFF \
+            -DFEATURE_qtdiag=OFF \
+            -DFEATURE_qtplugininfo=OFF
+          cmake --build . --parallel
+          cmake --install .
+
+      - name: Build Qt Translations
+        shell: msys2 {0}
+        run: |
+          curl -L -o qttranslations.zip https://download.qt.io/official_releases/qt/6.6/6.6.2/submodules/qttranslations-everywhere-src-6.6.2.zip
+          unzip qttranslations.zip
+          cd qttranslations-everywhere-src-6.6.2
+          mkdir build && cd build
+          cmake -G "Ninja" .. -DCMAKE_INSTALL_PREFIX=$INSTALLDIR
+          cmake --build . --parallel
+          cmake --install .
+
+      - name: Clean Up
+        shell: msys2 {0}
+        run: |
+          rm -rf $GITHUB_WORKSPACE/*.zip
+          rm -rf $GITHUB_WORKSPACE/SDL2-2.30.1
+          rm -rf $GITHUB_WORKSPACE/qtbase-everywhere-src-6.6.2
+          rm -rf $GITHUB_WORKSPACE/qtsvg-everywhere-src-6.6.2
+          rm -rf $GITHUB_WORKSPACE/qtimageformats-everywhere-src-6.6.2
+          rm -rf $GITHUB_WORKSPACE/qttools-everywhere-src-6.6.2
+          rm -rf $GITHUB_WORKSPACE/qttranslations-everywhere-src-6.6.2
+
+      - name: Compress Dependencies (7z)
+        shell: msys2 {0}
+        run: |
+          7z a deps-x64.7z deps-x64/
+
+      - name: Upload 7z Archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: deps-x64-7z
+          path: deps-x64.7z
