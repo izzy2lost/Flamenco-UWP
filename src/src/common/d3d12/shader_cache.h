@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <vector>
 #include <wrl/client.h>
+#include <string>
 
 namespace D3D12 {
 
