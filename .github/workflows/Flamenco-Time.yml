@@ -52,10 +52,12 @@ jobs:
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
 
-      - name: Restore NuGet packages  
-        run: nuget restore src/duckstation-uwp.sln
+      - name: Restore NuGet packages
+        run: |
+          nuget restore src/duckstation-uwp.sln
+          nuget restore ./src/src/util/util.vcxproj
 
-      - name: Install Microsoft.Windows.CppWinRT NuGet package
+      - name: Install CppWinRT to Solution Packages
         run: |
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.230706.1 -OutputDirectory ./src/packages
 
@@ -64,7 +66,8 @@ jobs:
           msbuild ./src/src/util/util.vcxproj `
             /p:Configuration=ReleaseUWP `
             /p:Platform=x64 `
-            /p:RestorePackagesPath=./src/packages
+            /p:RestorePackagesPath=$(Build.SourcesDirectory)/src/packages `
+            /p:NuGetPackageRoot=$(Build.SourcesDirectory)/src/packages
         shell: pwsh
   
       - name: App Build
