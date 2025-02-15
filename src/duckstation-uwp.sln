@@ -1,5 +1,4 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33209.295
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -18,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "common", "src\common\common
 		{7FF9FDB9-D504-47DB-A16A-B08071999620} = {7FF9FDB9-D504-47DB-A16A-B08071999620}
 		{39F0ADFF-3A84-470D-9CF0-CA49E164F2F3} = {39F0ADFF-3A84-470D-9CF0-CA49E164F2F3}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rcheevos", "dep\rcheevos\rcheevos.vcxproj", "{4BA0A6D4-3AE1-42B2-9347-096FD023FF64}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "src\core\core.vcxproj", "{868B98C8-65A1-494B-8346-250A73A48C0A}"
 	ProjectSection(ProjectDependencies) = postProject
