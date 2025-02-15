@@ -52,6 +52,12 @@ jobs:
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
 
+      - name: Build Dependencies
+        run: |
+          msbuild ./Dependencies/util/util.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+          msbuild ./Dependencies/fmt/fmt.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+        shell: pwsh
+
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
