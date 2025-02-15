@@ -10,7 +10,7 @@ jobs:
     env:
       Platform: x64
       Configuration: Release
-      ArtifactPath: ${{ github.workspace }}/dependency-artifacts
+      ArtifactPath: D:\a\Flamenco-UWP\Flamenco-UWP\src\dep\fmt\build\Release-x64\fmt\fmt.lib
     
     steps:
       - name: Add msbuild to PATH
