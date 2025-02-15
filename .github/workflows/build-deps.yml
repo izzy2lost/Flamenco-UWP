@@ -37,8 +37,8 @@ jobs:
       - name: Install dependencies using pacman
         run: |
           msys2_shell_path="C:\\msys64\\usr\\bin\\bash.exe"
-          $msys2_shell_path -c "pacman -Syu --noconfirm"
-          $msys2_shell_path -c "pacman -S --noconfirm mingw-w64-x86_64-qt6 mingw-w64-x86_64-sdl2"
+          & "$msys2_shell_path" -c "pacman -Syu --noconfirm"
+          & "$msys2_shell_path" -c "pacman -S --noconfirm mingw-w64-x86_64-qt6 mingw-w64-x86_64-sdl2"
 
       - name: Download and extract SDL2
         run: |
