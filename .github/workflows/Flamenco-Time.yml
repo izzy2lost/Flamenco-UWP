@@ -52,9 +52,9 @@ jobs:
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
 
-      - name: Restore NuGet packages
-        run: nuget restore
-
+      - name: Restore NuGet packages  
+        run: nuget restore src/src/duckstation-uwp/packages.config
+  
       - name: Build Dependencies
         run: |
           msbuild ./src/dep/fmt/fmt.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
