@@ -1,41 +1,40 @@
-name: Build Dependencies
+name: Build libsamplerate for UWP
 
 on:
+  push:
+    paths:
+      - 'src/dep/libsamplerate/**'
+  pull_request:
+    paths:
+      - 'src/dep/libsamplerate/**'
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-    
-    env:
-      Platform: x64
-      Configuration: Release
-      ArtifactPath: D:\a\Flamenco-UWP\Flamenco-UWP\src\dep\libsamplerate\build\Release-x64\libsamplerate\libsamplerate.lib
-    
+
     steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Setup NuGet.exe for use with actions
-        uses: NuGet/setup-nuget@v1.1.1
+    - name: Configure CMake
+      run: |
+        mkdir build
+        cd build
+        cmake ../src/dep/libsamplerate -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_BUILD_TYPE=Release
 
-      - name: Restore NuGet packages
-        run: nuget restore ./src/dep/fmt/fmt.vcxproj
-        shell: pwsh
+    - name: Build libsamplerate
+      run: |
+        cd build
+        cmake --build . --config Release
 
-      - name: Build Dependencies
-        run: |
-          msbuild ./src/dep/libsamplerate/libsamplerate.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
-        shell: pwsh
-
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: DependencyBuild
-          path: ${{ env.ArtifactPath }}
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: libsamplerate-uwp
+        path: |
+          build/Release/*.lib
+          build/Release/*.dll
