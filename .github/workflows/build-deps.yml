@@ -24,8 +24,9 @@ jobs:
       - name: Set Environment Variables
         shell: msys2 {0}
         run: |
-          echo "INSTALLDIR=$GITHUB_WORKSPACE/deps-x64" >> $GITHUB_ENV
-          mkdir -p $INSTALLDIR
+          INSTALLDIR="$GITHUB_WORKSPACE/deps-x64"
+          echo "INSTALLDIR=$INSTALLDIR" >> $GITHUB_ENV
+          mkdir -p "$INSTALLDIR"
 
       - name: Build SDL2
         shell: msys2 {0}
