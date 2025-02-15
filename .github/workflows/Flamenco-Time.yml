@@ -51,34 +51,6 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
-
-      - name: Restore NuGet packages
-        run: |
-          nuget restore src/duckstation-uwp.sln
-          nuget restore ./src/src/util/util.vcxproj
-
-      - name: Install CppWinRT to Solution Packages
-        run: |
-          nuget install Microsoft.Windows.CppWinRT -Version 2.0.230706.1 -OutputDirectory ./src/packages
-
-      - name: Verify CppWinRT Installation
-        run: |
-          $packagePath = "./src/packages/Microsoft.Windows.CppWinRT.2.0.230706.1"
-          if (-not (Test-Path "$packagePath/build/native/Microsoft.Windows.CppWinRT.props")) {
-            Write-Error "CppWinRT package not installed correctly!"
-            Get-ChildItem -Recurse ./src/packages
-            exit 1
-          }
-        shell: pwsh
-
-      - name: Build util project
-        run: |
-          msbuild ./src/src/util/util.vcxproj `
-            /p:Configuration=ReleaseUWP `
-            /p:Platform=x64 `
-            /p:RestorePackagesPath=${{ github.workspace }}/src/packages `
-            /p:NuGetPackageRoot=${{ github.workspace }}/src/packages
-        shell: pwsh
   
       - name: App Build
         run: |
