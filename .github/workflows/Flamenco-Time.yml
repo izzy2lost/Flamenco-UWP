@@ -19,7 +19,7 @@ jobs:
     env:
       SolutionPath: src/duckstation-uwp.sln
       Platform: x64
-      Configuration: Release
+      Configuration: ReleaseUWP
       BuildMode: SideLoadOnly
       AppxBundle: Never      
       ProjectPath: src/src/duckstation-uwp/duckstation-uwp.vcxproj
