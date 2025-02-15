@@ -42,7 +42,7 @@ set QTMINOR=6.6
 set SDL=SDL2-2.30.1
 
 call :downloadfile "%SDL%.zip" "https://libsdl.org/release/%SDL%.zip" c15ded54e9f32f8a1f9ed3e3dc072837a320ed23c5d0e95b7c18ecbe05c1187b || goto error
-call :downloadfile "qtbase-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtbase-everywhere-src-%QT%.zip" 3582dbc46df280365fc5d5e6cc8fcfc72ddbddbd330a03a98eec24b8b44fa4d0 || goto error
+call :downloadfile "qtbase-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtbase-everywhere-src-%QT%.zip"
 call :downloadfile "qtimageformats-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtimageformats-everywhere-src-%QT%.zip" 2176b623c9141b1136d57ff9ca1ed12e3636146b53c6feed2083e1cbecff6454 || goto error
 call :downloadfile "qtsvg-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtsvg-everywhere-src-%QT%.zip" 84ba758ef06b93532f2d098f0d08d7bbddf6f3e6273c9e0d3a58498338f85b18 || goto error
 call :downloadfile "qttools-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qttools-everywhere-src-%QT%.zip" c760fbd229de8a02e793fa41ddd6843cd2cb9c93a4e99bc5384c646599aee996 || goto error
