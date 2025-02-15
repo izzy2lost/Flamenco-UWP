@@ -1,0 +1,12 @@
+prefix=D:/duckstation/dep/msvc/deps-x64
+exec_prefix=D:/duckstation/dep/msvc/deps-x64
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libcpuinfo
+Description: Library to detect essential performance optimization information about host CPU.
+Version: 
+URL: 
+Libs: -L${libdir} -lcpuinfo
+Cflags: -I${includedir}
+

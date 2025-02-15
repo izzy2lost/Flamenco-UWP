@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="bb968db0-325f-4b61-8490-33630267b894"
+    Publisher="CN=irixaligned"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="bb968db0-325f-4b61-8490-33630267b894" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>DuckStation-UWP</DisplayName>
+    <PublisherDisplayName>irixaligned</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="duckstation_uwp.App">
+      <uap:VisualElements
+        DisplayName="DuckStation-UWP"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        Description="A port of the PSX emulator DuckStation to Xbox and other UWP platforms"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\Square310x310Logo.png" Square71x71Logo="Assets\Square71x71Logo.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
+        <uap:SplashScreen Image="Assets\SplashScreen.png"  BackgroundColor="#2E2E2E"/>
+      </uap:VisualElements>
+	  <Extensions>
+        <uap:Extension Category="windows.protocol">
+          <uap:Protocol Name="duckstation"/>
+        </uap:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust"/>
+    <!-- broadFileSystemAccess is a no-op on Xbox, i think -->
+    <!-- if it ain't broke, don't fix it i figure, but it is strange -->
+    <rescap:Capability Name="broadFileSystemAccess" />
+    <rescap:Capability Name="expandedResources" />
+    <Capability Name="internetClient" />
+    <Capability Name="codeGeneration"/>
+    <uap:Capability Name="removableStorage"/>
+  </Capabilities>
+</Package>

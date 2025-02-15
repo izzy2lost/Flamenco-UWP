@@ -1,0 +1,12 @@
+prefix=D:/duckstation/dep/msvc/deps-x64
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: harfbuzz subsetter
+Description: HarfBuzz font subsetter
+Version: 8.3.1
+
+Requires: harfbuzz = 8.3.1
+Libs: -L${libdir} -lharfbuzz-subset
+Cflags: -I${includedir}/harfbuzz
