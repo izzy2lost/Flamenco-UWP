@@ -53,7 +53,7 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
 
       - name: Restore NuGet packages  
-        run: nuget restore src/src/duckstation-uwp/packages.config
+        run: nuget restore src/duckstation-uwp.sln
   
       - name: Build Dependencies
         run: |
