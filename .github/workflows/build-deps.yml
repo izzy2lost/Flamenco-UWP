@@ -1,0 +1,35 @@
+name: Build Deps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: windows-2022
+    steps:
+      # Due to what appears to be MAX_PATH limitations, use a different directory.
+    - name: Clone Repository
+      shell: cmd
+      run: |
+        cd \
+        git clone https://github.com/izzy2lost/Flamenco-UWP.git --depth=1
+
+    - name: Build X64 Dependencies
+      shell: cmd
+      run: |
+        cd \duckstation-uwp
+        scripts\build-dependencies-windows-x64.bat
+
+
+    - name: Create Dependencies Archive
+      shell: cmd
+      run: |
+        cd \duckstation-uwp\dep\msvc
+        "C:\Program Files\7-Zip\7z.exe" a "%GITHUB_WORKSPACE%\deps-x64.7z" .\deps-x64
+
+    - name: Upload Dependencies Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: deps-x64
+        path: deps-x64.7z
+        if-no-files-found: error
