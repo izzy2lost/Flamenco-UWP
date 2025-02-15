@@ -1,0 +1,41 @@
+name: Build Dependencies
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    env:
+      Platform: x64
+      Configuration: Release
+      ArtifactPath: ${{ github.workspace }}/dependency-artifacts
+    
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup NuGet.exe for use with actions
+        uses: NuGet/setup-nuget@v1.1.1
+
+      - name: Restore NuGet packages
+        run: nuget restore ./src/dep/fmt/fmt.vcxproj
+        shell: pwsh
+
+      - name: Build Dependencies
+        run: |
+          msbuild ./src/dep/fmt/fmt.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+        shell: pwsh
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: DependencyBuild
+          path: ${{ env.ArtifactPath }}
