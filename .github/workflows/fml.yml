@@ -20,6 +20,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: libsamplerate-uwp
-        path: |
-          build/Release/*.lib
-          build/Release/*.dll
+        path: D:/a/Flamenco-UWP/Flamenco-UWP/src/dep/libsamplerate
