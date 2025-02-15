@@ -34,10 +34,11 @@ jobs:
           mkdir -p $GITHUB_WORKSPACE/deps-build
           mkdir -p $GITHUB_WORKSPACE/deps-x64
 
-      - name: Install dependencies
+      - name: Install dependencies using pacman
         run: |
-          pacman -Syu --noconfirm
-          pacman -S --noconfirm mingw-w64-x86_64-qt6 mingw-w64-x86_64-sdl2
+          msys2_shell_path="C:\\msys64\\usr\\bin\\bash.exe"
+          $msys2_shell_path -c "pacman -Syu --noconfirm"
+          $msys2_shell_path -c "pacman -S --noconfirm mingw-w64-x86_64-qt6 mingw-w64-x86_64-sdl2"
 
       - name: Download and extract SDL2
         run: |
@@ -66,7 +67,7 @@ jobs:
           7z a "$GITHUB_WORKSPACE/deps-x64.7z" "$GITHUB_WORKSPACE/deps-x64/*"
 
       - name: Upload dependencies as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: deps-x64
           path: $GITHUB_WORKSPACE/deps-x64.7z
