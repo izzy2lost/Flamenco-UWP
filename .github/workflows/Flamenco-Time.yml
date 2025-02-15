@@ -17,13 +17,13 @@ jobs:
     runs-on: windows-latest
     
     env:
-      SolutionPath: src/duckstation-uwp.sln
+      SolutionPath: duckstation.sln
       Platform: x64
       Configuration: ReleaseUWP
       BuildMode: SideLoadOnly
       AppxBundle: Never      
-      ProjectPath: src/src/duckstation-uwp/duckstation-uwp.vcxproj
-      ProjectDirectory: .\src/src/duckstation-uwp/
+      ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
+      ProjectDirectory: .\src/duckstation-uwp/
       PackageOutputRootDir: C:\AppPackage
       PackageOutputDir: Flamenco 
 
