@@ -17,7 +17,7 @@ jobs:
     - name: Build X64 Dependencies
       shell: cmd
       run: |
-        cd \duckstation-uwp
+        cd \Flamenco-UWP
         scripts\build-dependencies-windows-x64.bat
 
 
