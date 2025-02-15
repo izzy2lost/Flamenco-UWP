@@ -54,7 +54,7 @@ jobs:
 
       - name: Build Dependencies
         run: |
-          msbuild ./src/dep/fmt/fmt.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
+          msbuild -t:restore ./src/dep/fmt/fmt.vcxproj /p:Configuration=$env:Configuration /p:Platform=$env:Platform
         shell: pwsh
 
       - name: App Build
