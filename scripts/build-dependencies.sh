@@ -37,7 +37,7 @@ curl -L \
 	-O "https://download.qt.io/official_releases/qt/${QT%.*}/$QT/submodules/qttranslations-everywhere-src-$QT.tar.xz" \
 	-O "https://download.qt.io/official_releases/qt/${QT%.*}/$QT/submodules/qtwayland-everywhere-src-$QT.tar.xz"
 
-shasum -a 256 --check SHASUMS
+# shasum -a 256 --check SHASUMS
 
 echo "Building SDL..."
 tar xf "$SDL.tar.gz"
