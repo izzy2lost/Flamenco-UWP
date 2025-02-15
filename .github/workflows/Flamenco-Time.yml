@@ -60,6 +60,10 @@ jobs:
           nuget install Microsoft.Windows.CppWinRT -Version 2.0.230706.1 -OutputDirectory D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\packages
         shell: pwsh
 
+      - name: Install C++/WinRT
+        run: |
+          nuget install Microsoft.Windows.CppWinRT -Version 2.0.230706.1 -OutputDirectory packages
+
       - name: Build util project
         run: |
           msbuild D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\util.vcxproj /p:Configuration=ReleaseUWP /p:Platform=x64 
