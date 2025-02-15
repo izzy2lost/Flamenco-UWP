@@ -71,8 +71,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vixl", "dep\vixl\vixl.vcxpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libsamplerate", "dep\libsamplerate\libsamplerate.vcxproj", "{39F0ADFF-3A84-470D-9CF0-CA49E164F2F3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rcheevos", "dep\rcheevos\rcheevos.vcxproj", "{4BA0A6D4-3AE1-42B2-9347-096FD023FF64}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "duckstation-uwp", "src\duckstation-uwp\duckstation-uwp.vcxproj", "{E2A6CEA9-9537-4C61-B637-81F1F17EF638}"
 	ProjectSection(ProjectDependencies) = postProject
 		{6245DEC8-D2DA-47EE-A373-CBD6FCF3ECE6} = {6245DEC8-D2DA-47EE-A373-CBD6FCF3ECE6}
