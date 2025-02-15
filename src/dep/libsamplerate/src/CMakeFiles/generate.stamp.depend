@@ -1,0 +1,11 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.31/Modules/BasicConfigVersion-SameMajorVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CMakePushCheckState.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/CheckCSourceRuns.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/Internal/CheckSourceRuns.cmake
+C:/Program Files/CMake/share/cmake-3.31/Modules/WriteBasicConfigVersionFile.cmake
+D:/a/Flamenco-UWP/Flamenco-UWP/src/dep/libsamplerate/cmake/ClipMode.cmake
+D:/a/Flamenco-UWP/Flamenco-UWP/src/dep/libsamplerate/cmake/SampleRateConfig.cmake.in
+D:/a/Flamenco-UWP/Flamenco-UWP/src/dep/libsamplerate/samplerate.pc.in
+D:/a/Flamenco-UWP/Flamenco-UWP/src/dep/libsamplerate/src/CMakeLists.txt
