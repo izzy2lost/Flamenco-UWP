@@ -54,7 +54,10 @@ jobs:
 
       - name: Restore NuGet packages  
         run: nuget restore src/duckstation-uwp.sln
-         
+
+      - name: Build util.lib
+        run: msbuild src/src/util/util.vcxproj /p:Configuration=ReleaseUWP /p:Platform=x64
+      
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
