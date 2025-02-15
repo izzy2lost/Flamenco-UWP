@@ -28,6 +28,13 @@ jobs:
           echo "INSTALLDIR=$INSTALLDIR" >> $GITHUB_ENV
           mkdir -p "$INSTALLDIR"
 
+      - name: Add CMake to PATH
+        shell: msys2 {0}
+        run: |
+          export PATH="/c/Program Files/CMake/bin:$PATH"
+          echo "PATH=$PATH" >> $GITHUB_ENV
+          cmake --version
+
       - name: Build SDL2
         shell: msys2 {0}
         run: |
