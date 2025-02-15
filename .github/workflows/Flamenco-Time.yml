@@ -57,7 +57,7 @@ jobs:
 
       - name: Restore NuGet packages
         run: |
-          nuget restore D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\util.vcxproj
+          dotnet restore D:\a\Flamenco-UWP\Flamenco-UWP\src\src\util\util.vcxproj
         shell: pwsh
 
       - name: Build util project
