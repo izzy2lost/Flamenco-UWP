@@ -11,7 +11,7 @@ on:
         description: 'Package Name'
         required: true
         default: 'Flamenco'
-
+        
 jobs:
   build:
     runs-on: windows-latest
@@ -27,7 +27,7 @@ jobs:
       PackageOutputRootDir: C:\AppPackage
       PackageOutputDir: Flamenco 
 
-    steps:
+    steps:            
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
              
@@ -37,18 +37,18 @@ jobs:
           submodules: true 
           fetch-depth: 0
 
-      - name: Setup NuGet.exe for use with actions
+      - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
-
-      - name: Install MinGW64
-        run: |
-          choco install mingw
-          echo "::add-path::C:\\tools\\mingw64\\bin"
         
+      - name: Restore NuGet Packages
+        run: |
+          nuget restore $env:SolutionPath
+        shell: pwsh
+
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
-          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider"
+          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
           echo "THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
         shell: pwsh
 
@@ -56,20 +56,25 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
-          
-      - name: Build zlib
+
+      - name: Clean workspace
         run: |
-          msbuild dep/zlib/zlib.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
-                  
-      - name: Build zstd
-        run: |
-          msbuild dep/zstd/zstd.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
-        
-      - name: Rebuild util library
-        run: |
-          msbuild src/util/util.vcxproj /t:Clean /p:Configuration=ReleaseUWP /p:Platform=x64
-          msbuild src/util/util.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
+          git clean -fdx
+          if (Test-Path "${{ env.ProjectDirectory }}\x64\ReleaseUWP") {
+            Remove-Item -Recurse -Force "${{ env.ProjectDirectory }}\x64\ReleaseUWP"
+          }
+        shell: pwsh
                         
+      - name: Build Dependencies
+        run: |
+          msbuild src/util/util.vcxproj `
+            /t:Clean,Rebuild `
+            /p:Configuration=$env:Configuration `
+            /p:Platform=$env:Platform `
+            /p:CppWinRTUseLatest=false `
+            /p:CppWinRTVersion=2.0.230511.6
+        shell: pwsh
+
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
@@ -80,7 +85,9 @@ jobs:
             /p:AppxBundle=$env:AppxBundle `
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
             /p:AppxPackageTestDir="${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}" `
-            /p:AppxPackageSigningEnabled=true `            
+            /p:AppxPackageSigningEnabled=true `
+            /p:CppWinRTUseLatest=false `
+            /p:CppWinRTVersion=2.0.230511.6 `
             /restore
         shell: pwsh
 
