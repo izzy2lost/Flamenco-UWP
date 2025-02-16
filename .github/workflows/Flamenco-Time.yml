@@ -51,6 +51,10 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+
+      - name: Clean workspace
+        run: |
+          git clean -fdx
                         
       - name: App Build
         run: |
