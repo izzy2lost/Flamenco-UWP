@@ -51,15 +51,11 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
-          
-      - name: Clean Build
-        run: |
-          msbuild $env:SolutionPath /t:Clean /p:Platform=$env:Platform /p:Configuration=$env:Configuration
-        shell: pwsh
-        
+                        
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
+            /t:Rebuild `
             /p:Platform=$env:Platform `
             /p:Configuration=$env:Configuration `
             /p:UapAppxPackageBuildMode=$env:BuildMode `
