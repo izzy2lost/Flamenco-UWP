@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 project(duckstation C CXX)
 
+if(MINGW)
+  target_compile_definitions(util PRIVATE "-DMINGW=1")
+  target_link_libraries(util PRIVATE mingw32)
+endif()
+
 # Policy settings.
 cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
