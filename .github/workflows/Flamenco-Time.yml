@@ -57,24 +57,6 @@ jobs:
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
 
-      - name: Clean workspace
-        run: |
-          git clean -fdx
-          if (Test-Path "${{ env.ProjectDirectory }}\x64\ReleaseUWP") {
-            Remove-Item -Recurse -Force "${{ env.ProjectDirectory }}\x64\ReleaseUWP"
-          }
-        shell: pwsh
-                        
-      - name: Build Dependencies
-        run: |
-          msbuild src/util/util.vcxproj `
-            /t:Clean,Rebuild `
-            /p:Configuration=$env:Configuration `
-            /p:Platform=$env:Platform `
-            /p:CppWinRTUseLatest=false `
-            /p:CppWinRTVersion=2.0.230511.6
-        shell: pwsh
-
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
