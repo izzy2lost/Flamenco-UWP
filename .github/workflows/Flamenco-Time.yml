@@ -51,7 +51,15 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
-
+          
+      - name: Build zlib
+        run: |
+          msbuild dep/zlib/zlib.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
+                  
+      - name: Build zstd
+        run: |
+          msbuild dep/zstd/zstd.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
+        
       - name: Rebuild util library
         run: |
           msbuild src/util/util.vcxproj /t:Clean /p:Configuration=ReleaseUWP /p:Platform=x64
