@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\msvc\vsprops\Configurations.props" />
   <ItemGroup>
-    <ClCompile Include="deps\clog\src\clog.c" />
     <ClCompile Include="src\api.c" />
     <ClCompile Include="src\arm\cache.c">
       <ExcludedFromBuild Condition="'$(Platform)'!='ARM64'">true</ExcludedFromBuild>
@@ -50,7 +49,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="deps\clog\include\clog.h" />
     <ClInclude Include="include\cpuinfo.h" />
     <ClInclude Include="src\arm\api.h" />
     <ClInclude Include="src\arm\midr.h" />
@@ -70,7 +68,6 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;$(ProjectDir)deps\clog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
