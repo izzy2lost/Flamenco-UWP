@@ -11,7 +11,7 @@ on:
         description: 'Package Name'
         required: true
         default: 'Flamenco'
-        
+
 jobs:
   build:
     runs-on: windows-latest
@@ -40,6 +40,11 @@ jobs:
       - name: Setup NuGet.exe for use with actions
         uses: NuGet/setup-nuget@v1.1.1
 
+      - name: Install MinGW64
+        run: |
+          choco install mingw
+          echo "::add-path::C:\\tools\\mingw64\\bin"
+        
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
