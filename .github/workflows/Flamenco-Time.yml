@@ -54,8 +54,8 @@ jobs:
 
       - name: Rebuild util library
         run: |
-          msbuild src/util/util.vcxproj /t:Clean /p:Configuration=Release /p:Platform=x64
-          msbuild src/util/util.vcxproj /t:Rebuild /p:Configuration=Release /p:Platform=x64
+          msbuild src/util/util.vcxproj /t:Clean /p:Configuration=ReleaseUWP /p:Platform=x64
+          msbuild src/util/util.vcxproj /t:Rebuild /p:Configuration=ReleaseUWP /p:Platform=x64
                         
       - name: App Build
         run: |
