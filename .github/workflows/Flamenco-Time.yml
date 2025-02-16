@@ -27,7 +27,7 @@ jobs:
       PackageOutputRootDir: C:\AppPackage
       PackageOutputDir: Flamenco 
 
-    steps:            
+    steps:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
              
@@ -39,11 +39,16 @@ jobs:
 
       - name: Setup NuGet.exe for use with actions
         uses: NuGet/setup-nuget@v1.1.1
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '2.0.230511.6'
         
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
-          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
+          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider"
           echo "THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
         shell: pwsh
 
