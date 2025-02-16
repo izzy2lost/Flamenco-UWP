@@ -67,8 +67,7 @@ jobs:
             /p:AppxBundle=$env:AppxBundle `
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
             /p:AppxPackageTestDir="${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}" `
-            /p:AppxPackageSigningEnabled=true `
-            /p:CppWinRTVersion=2.0.230511.6 `
+            /p:AppxPackageSigningEnabled=true `            
             /restore
         shell: pwsh
 
