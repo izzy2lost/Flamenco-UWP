@@ -49,7 +49,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\cpuinfo.h" />
+    <ClInclude Include="dep\cpuinfo\include\cpuinfo.h" />
     <ClInclude Include="src\arm\api.h" />
     <ClInclude Include="src\arm\midr.h" />
     <ClInclude Include="src\arm\windows\api.h" />
