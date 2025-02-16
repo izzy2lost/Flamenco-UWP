@@ -40,11 +40,6 @@ jobs:
       - name: Setup NuGet.exe for use with actions
         uses: NuGet/setup-nuget@v1.1.1
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '2.0.230511.6'
-        
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
