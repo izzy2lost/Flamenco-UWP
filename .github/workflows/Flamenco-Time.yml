@@ -27,16 +27,16 @@ jobs:
       PackageOutputRootDir: C:\AppPackage
       PackageOutputDir: Flamenco
 
-    steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-
+    steps:      
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
-
+          
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
