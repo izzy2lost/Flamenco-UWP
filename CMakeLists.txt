@@ -1,13 +1,36 @@
-cmake_minimum_required(VERSION 3.16)
-project(duckstation C CXX)
+cmake_minimum_required(VERSION 3.31.5)
 
-# Policy settings.
-cmake_policy(SET CMP0069 NEW)
-set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
+project(Flamenco-UWP C CXX)
 
+# Set UWP-specific configurations
+set(CMAKE_SYSTEM_NAME WindowsStore)
+set(CMAKE_SYSTEM_PROCESSOR x64)
+set(CMAKE_CXX_COMPILER "cl.exe")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_SYSTEM_VERSION 10.0.19041.0)
+set(CMAKE_VS_PLATFORM_TOOLSET "v143")
+set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
+set(CMAKE_GENERATOR_PLATFORM "x64")
+
+# Set module and prefix paths for dependencies (example)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
+list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/Windows Kits/10")
+
+# Print environment details for debugging
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "CMake Host System: ${CMAKE_HOST_SYSTEM_NAME}")
+message(STATUS "Processor Architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMake Generator: ${CMAKE_GENERATOR}")
+message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "Source Directory: ${CMAKE_SOURCE_DIR}")
+message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
+
+# Enable UWP support
+add_subdirectory(src)
 
 # Add the path where DetectPageSize.cmake is located
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
