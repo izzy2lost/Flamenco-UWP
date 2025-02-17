@@ -6,8 +6,8 @@ if(MINGW)
   set(CMAKE_CXX_COMPILER "g++")
 endif()
 
-# Find the JPEG library
-find_package(JPEG REQUIRED)
+# Comment out the JPEG library
+# find_package(JPEG REQUIRED)
 
 add_library(util
   audio_stream.cpp
@@ -88,7 +88,7 @@ target_precompile_headers(util PRIVATE "pch.h")
 target_include_directories(util PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/..")
 target_include_directories(util PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/..")
 target_link_libraries(util PUBLIC common simpleini imgui)
-target_link_libraries(util PRIVATE libchdr JPEG::JPEG PNG::PNG ZLIB::ZLIB soundtouch xxhash Zstd::Zstd reshadefx)
+target_link_libraries(util PRIVATE libchdr PNG::PNG ZLIB::ZLIB soundtouch xxhash Zstd::Zstd reshadefx)
 
 if(ENABLE_CUBEB)
   target_sources(util PRIVATE
