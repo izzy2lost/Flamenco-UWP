@@ -1,9 +1,3 @@
-cmake_minimum_required(VERSION 3.10)
-if(MINGW)
-  set(CMAKE_C_COMPILER "gcc")
-  set(CMAKE_CXX_COMPILER "g++")
-endif()
-
 add_library(util
   audio_stream.cpp
   audio_stream.h
@@ -202,7 +196,9 @@ if(ENABLE_SDL2)
   target_compile_definitions(util PUBLIC "ENABLE_SDL2=1")
   target_link_libraries(util PUBLIC SDL2::SDL2)
 
+  # Copy bundled SDL2 to output on Windows.
   if(WIN32)
+    # Copy SDL2 DLL to binary directory.
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       get_property(SDL2_DLL_PATH TARGET SDL2::SDL2 PROPERTY IMPORTED_LOCATION_DEBUG)
     else()
@@ -304,6 +300,7 @@ function(add_util_resources target)
     get_property(UTIL_METAL_SOURCES GLOBAL PROPERTY UTIL_METAL_SOURCES)
     add_metal_sources(${target} ${UTIL_METAL_SOURCES})
 
+    # Copy MoltenVK into the bundle
     unset(MOLTENVK_PATH CACHE)
     find_file(MOLTENVK_PATH NAMES
       libMoltenVK.dylib
