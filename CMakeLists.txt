@@ -14,7 +14,40 @@ message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake/Qt6" "${CMAKE_SOURCE_DIR}/CMakeModules")
+# Function to find all CMake config directories and add them to CMAKE_MODULE_PATH
+function(find_and_add_cmake_paths)
+    set(SEARCH_DIRS 
+        "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake"
+        "${CMAKE_SOURCE_DIR}/dep/other_libs"
+        "${CMAKE_SOURCE_DIR}/thirdparty"
+    )
+
+    foreach(dir ${SEARCH_DIRS})
+        if(EXISTS "${dir}")
+            file(GLOB CONFIG_DIRS "${dir}/*")
+            foreach(config_dir ${CONFIG_DIRS})
+                if(EXISTS "${config_dir}/")
+                    list(APPEND CMAKE_MODULE_PATH "${config_dir}")
+                endif()
+            endforeach()
+        endif()
+    endforeach()
+
+    # Remove duplicates
+    list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)
+
+    # Print for debugging
+    message(STATUS "Final CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
+
+    # Set the updated module path globally
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
+endfunction()
+
+# Call the function to populate CMAKE_MODULE_PATH
+find_and_add_cmake_paths()
+
+# Include your custom modules directory
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # Platform detection.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
