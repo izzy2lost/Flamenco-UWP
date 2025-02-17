@@ -4,13 +4,6 @@ project(duckstation C CXX)
 set(CMAKE_PREFIX_PATH "dep/msvc/deps-x64" ${CMAKE_PREFIX_PATH})
 find_package(SDL2 REQUIRED)
 
-set(CMAKE_PREFIX_PATH "dep/msvc/deps-x64/lib/cmake/Qt6")  
-set(Qt6_DIR "dep/msvc/deps-x64/lib/cmake/Qt6")
-
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
-
-target_link_libraries(duckstation-qt PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
-
 # Policy settings.
 cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
