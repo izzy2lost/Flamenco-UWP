@@ -88,4 +88,9 @@ std::vector<std::pair<std::string, const BIOS::ImageInfo*>> FindBIOSImagesInDire
 
 /// Returns true if any BIOS images are found in the configured BIOS directory.
 bool HasAnyBIOSImages();
+
+#ifdef WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)  // UWP-Specific Code
+std::wstring GetUWPBIOSPath();
+#endif
+
 } // namespace BIOS
