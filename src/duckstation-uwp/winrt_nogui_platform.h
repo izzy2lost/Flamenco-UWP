@@ -26,6 +26,7 @@
 #include <winrt/Windows.Graphics.Display.Core.h>
 #include <winrt/Windows.Gaming.Input.h>
 #include <winrt/Windows.System.h>
+#define WINRT_VERSION "2.0.230511.6"
 
 class WinRTNoGUIPlatform : public NoGUIPlatform
 {
