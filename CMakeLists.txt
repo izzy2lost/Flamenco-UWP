@@ -44,11 +44,11 @@ function(find_and_add_cmake_paths)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 endfunction()
 
-# Call the function to populate CMAKE_MODULE_PATH
-find_and_add_cmake_paths()
+detect_page_size(PAGE_SIZE)
+message(STATUS "Detected page size: ${PAGE_SIZE}")
 
-# Include your custom modules directory
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
+include(DetectPageSize)
 
 # Platform detection.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
