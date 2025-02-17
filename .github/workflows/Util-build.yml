@@ -18,14 +18,21 @@ jobs:
       Configuration: Release
 
     steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
+
+      - name: Setup MinGW
+        run: |
+          choco install mingw
+        shell: pwsh
+
+      - name: Add MinGW to PATH
+        run: |
+          echo "::add-path::C:\tools\mingw64\bin"
+        shell: pwsh
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
@@ -37,32 +44,27 @@ jobs:
 
       - name: get-cmake
         uses: lukka/get-cmake@v3.31.5
-  
+
       - name: Build zlib Library
         run: |
-          cmake -S dep/zlib -B build/zlib
+          cmake -G "MinGW Makefiles" -S dep/zlib -B build/zlib
           cmake --build build/zlib --config $env:Configuration
         shell: pwsh
 
       - name: Build zstd Library
         run: |
-          cmake -S dep/zstd -B build/zstd
+          cmake -G "MinGW Makefiles" -S dep/zstd -B build/zstd
           cmake --build build/zstd --config $env:Configuration
         shell: pwsh
-        
+
       - name: Build util Project
         run: |
-          msbuild $env:SolutionPath `
-            /t:Rebuild `
-            /p:Platform=$env:Platform `
-            /p:Configuration=$env:Configuration `
-            /p:CppWinRTUseLatest=false `
-            /p:CppWinRTVersion=2.0.230511.6 `
-            /restore
+          cmake -G "MinGW Makefiles" -S . -B build/util
+          cmake --build build/util --config $env:Configuration
         shell: pwsh
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: util Build
-          path: src/util/ReleaseUWP
+          path: build/util
