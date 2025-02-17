@@ -59,7 +59,7 @@ jobs:
 
       - name: Build util Project
         run: |
-          cmake -G "MinGW Makefiles" -S . -B build/util
+          cmake -G "MinGW Makefiles" -S src/util -B build/util
           cmake --build build/util
         shell: pwsh
 
