@@ -3,9 +3,8 @@ project(duckstation C CXX)
 
 set(CMAKE_PREFIX_PATH "dep/msvc/deps-x64" ${CMAKE_PREFIX_PATH})
 find_package(SDL2 REQUIRED)
-
+set(Qt6_DIR "dep/msvc/deps-x64/lib/cmake/Qt6")
 set(CMAKE_PREFIX_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64")
-set(Qt6_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake/Qt6")
 # Policy settings.
 cmake_policy(SET CMP0069 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
