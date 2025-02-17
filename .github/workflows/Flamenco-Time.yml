@@ -58,21 +58,6 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
 
-      - name: Cache Dependencies
-        id: cache-deps
-        uses: actions/cache@v3.3.2
-        with:
-          path: |       
-            dep/msvc/deps-x64
-          key: deps-${{ hashFiles('scripts/build-dependencies-windows-x64.bat') }}
-
-      - name: Build X64 Dependencies
-        if: steps.cache-deps.outputs.cache-hit != 'true'
-        env:
-          DEBUG: 0
-        run: scripts/build-dependencies-windows-x64.bat
-        shell: pwsh
-
       - name: App Build
         run: |
           msbuild $env:SolutionPath `
