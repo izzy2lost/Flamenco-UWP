@@ -63,10 +63,10 @@ jobs:
         with:
           release-candidate: true
 
-      - name: Configure CMake
+      - name: cmake config
         run: |
-          cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -DCMAKE_BUILD_TYPE=Release -A x64 -B build
-    
+          cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -A x64 -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION=10.0.19041.0 -B build
+      
       - name: Build project
         run: |
           cmake --build build --config Release
