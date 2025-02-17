@@ -1,12 +1,10 @@
 find_package(Qt6 6.6.2 COMPONENTS Core Gui Widgets Network LinguistTools REQUIRED)
 
-set(CMAKE_PREFIX_PATH "dep/msvc/deps-x64/lib/cmake/Qt6")  # Replace with the correct Qt6 path
+set(CMAKE_PREFIX_PATH "dep/msvc/deps-x64")  # Replace with the correct Qt6 path
 set(Qt6_DIR "dep/msvc/deps-x64/lib/cmake/Qt6")
-
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
-
-target_link_libraries(duckstation-qt PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
-
+target_link_libraries(DuckStation-Qt PRIVATE Qt6::Core Qt6::Gui Qt6::Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets)
 include(CopyBaseTranslations)
 
 set(CMAKE_AUTOMOC ON)
