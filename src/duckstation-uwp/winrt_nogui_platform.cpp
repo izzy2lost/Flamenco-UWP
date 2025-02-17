@@ -39,6 +39,7 @@
 #include <winrt/Windows.UI.Core.h>
 #include <winrt/Windows.UI.Input.h>
 #include <winrt/Windows.UI.ViewManagement.Core.h>
+#define WINRT_VERSION "2.0.230511.6"
 
 using namespace winrt::Windows;
 using namespace winrt::Windows::ApplicationModel::Core;
