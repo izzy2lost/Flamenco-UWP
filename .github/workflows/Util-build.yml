@@ -35,22 +35,21 @@ jobs:
           nuget restore $env:SolutionPath
         shell: pwsh
 
-      - name: Build minizip Library
+      - name: Install CMake
+        uses: lukka/get-cmake@v3
+
+      - name: Build zlib Library
         run: |
-          msbuild dep/minizip/minizip.vcxproj `
-            /t:Rebuild `
-            /p:Platform=$env:Platform `
-            /p:Configuration=$env:Configuration
+          cmake -S dep/zlib -B build/zlib
+          cmake --build build/zlib --config $env:Configuration
         shell: pwsh
 
-      - name: Build d3d12ma Library
+      - name: Build zstd Library
         run: |
-          msbuild dep/d3d12ma/d3d12ma.vcxproj `
-            /t:Rebuild `
-            /p:Platform=$env:Platform `
-            /p:Configuration=$env:Configuration
+          cmake -S dep/zstd -B build/zstd
+          cmake --build build/zstd --config $env:Configuration
         shell: pwsh
-
+        
       - name: Build util Project
         run: |
           msbuild $env:SolutionPath `
