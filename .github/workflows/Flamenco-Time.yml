@@ -64,7 +64,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -DSDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
+          cmake SDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
     
       - name: Install CMake
         uses: ssrobins/install-cmake@v1
