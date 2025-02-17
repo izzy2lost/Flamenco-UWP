@@ -60,7 +60,7 @@ jobs:
 
       - name: Set SDL2 Path
         run: |
-          cmake -DCMAKE_PREFIX_PATH="dep/msvc/deps-x64/include/SDL2" ..
+          cmake -DCMAKE_PREFIX_PATH=dep/msvc/deps-x64/include/SDL2 ..
 
       - name: Configure CMake
         run: |
