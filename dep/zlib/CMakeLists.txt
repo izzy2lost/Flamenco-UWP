@@ -1,10 +1,14 @@
-cmake_minimum_required(VERSION 3.10)  # Adjust version as needed
+cmake_minimum_required(VERSION 3.10)
 project(Zlib C)
 
-# Ensure this function is defined or remove its usage
 function(disable_compiler_warnings_for_target target)
-    # Define the function here if required, or remove references to it
+  if (MSVC)
+    target_compile_options(${target} PRIVATE /W0)
+  else()
+    target_compile_options(${target} PRIVATE -w)
+  endif()
 endfunction()
+
 add_library(zlib
   include/zconf.h
   include/zlib.h
