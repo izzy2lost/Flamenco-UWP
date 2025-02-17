@@ -58,11 +58,6 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
 
-      - name: Install CMake
-        uses: ssrobins/install-cmake@v1
-        with:
-          release-candidate: true   
-      
       - name: CMake Config  
         run: |
           cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -A x64 -DCMAKE_SYSTEM_VERSION="10.0.19041.0" -DCMAKE_SYSTEM_PROCESSOR="x86_64" -DCMAKE_PREFIX_PATH="Qt6" -B "build" .
