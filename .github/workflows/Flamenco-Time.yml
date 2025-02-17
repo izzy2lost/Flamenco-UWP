@@ -58,19 +58,19 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
 
-      - name: Set SDL2 Path
-        run: |
-          cmake -DCMAKE_PREFIX_PATH=dep/msvc/deps-x64/include/SDL2
-
-      - name: Configure CMake
-        run: |
-          cmake SDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
-    
       - name: Install CMake
         uses: ssrobins/install-cmake@v1
         with:
-          release-candidate: true
-     
+          release-candidate: true   
+      
+      - name: Set SDL2 Path
+        run: |
+          cmake -E env CMAKE_PREFIX_PATH=dep/msvc/deps-x64/include/SDL2
+
+      - name: Configure CMake
+        run: |
+          cmake -DSDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
+          
       - name: CMake Config  
         run: |
           cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -A x64 -DCMAKE_SYSTEM_VERSION="10.0.19041.0" -DCMAKE_SYSTEM_PROCESSOR="x86_64" -B "build" .
