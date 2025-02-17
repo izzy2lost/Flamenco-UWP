@@ -58,10 +58,10 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
         
-      - name: Setup cmake
-        uses: jwlawson/actions-setup-cmake@v2
+      - name: Install CMake
+        uses: ssrobins/install-cmake@v1
         with:
-          cmake-version: '3.16.x'
+          release-candidate: true
 
       - name: Configure CMake
         run: |
