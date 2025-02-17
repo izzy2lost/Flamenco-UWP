@@ -198,7 +198,7 @@ else()
 endif()
 
 
-# Write binaries to a seperate directory.
+# Write binaries to a separate directory.
 if(WIN32)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CPU_ARCH}")
 else()
@@ -215,7 +215,7 @@ find_package(Threads REQUIRED)
 
 
 # Enable large file support on Linux 32-bit platforms.
-# Android is deliberately ommitted here as it didn't support 64-bit ops on files until Android 7/N.
+# Android is deliberately omitted here as it didn't support 64-bit ops on files until Android 7/N.
 if((LINUX OR FREEBSD) AND (CPU_ARCH_X86 OR CPU_ARCH_ARM32))
   add_definitions("-D_FILE_OFFSET_BITS=64")
 endif()
@@ -243,4 +243,6 @@ add_subdirectory(src)
 if(ANDROID)
   add_subdirectory(android/app/src/cpp)
 endif()
-)
+
+# Closing the missing endif
+endif()
