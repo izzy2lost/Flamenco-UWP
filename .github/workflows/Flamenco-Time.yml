@@ -63,14 +63,6 @@ jobs:
         with:
           release-candidate: true   
       
-      - name: Set SDL2 Path
-        run: |
-          cmake -E env CMAKE_PREFIX_PATH=dep/msvc/deps-x64 cmake ..
-          
-      - name: Configure CMake
-        run: |
-          cmake -DSDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
-          
       - name: CMake Config  
         run: |
           cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -A x64 -DCMAKE_SYSTEM_VERSION="10.0.19041.0" -DCMAKE_SYSTEM_PROCESSOR="x86_64" -B "build" .
