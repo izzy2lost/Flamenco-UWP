@@ -1,0 +1,53 @@
+name: Build util
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      SolutionPath: src/util/util.vcxproj
+      Platform: x64
+      Configuration: ReleaseUWP
+
+    steps:
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.1.1
+
+      - name: Restore NuGet Packages
+        run: |
+          nuget restore $env:SolutionPath
+        shell: pwsh
+
+      - name: Build util Project
+        run: |
+          msbuild $env:SolutionPath `
+            /t:Rebuild `
+            /p:Platform=$env:Platform `
+            /p:Configuration=$env:Configuration `
+            /p:CppWinRTUseLatest=false `
+            /p:CppWinRTVersion=2.0.230511.6 `
+            /restore
+        shell: pwsh
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: util Build
+          path: src/util/ReleaseUWP
