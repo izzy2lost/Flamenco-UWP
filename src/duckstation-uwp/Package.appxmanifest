@@ -25,6 +25,9 @@
   </Dependencies>
 
   <Resources>
+    <Resource Language="x-generate" />
+    <Resource Path="Assets/bios/" />
+
     <Resource Language="x-generate"/>
   </Resources>
 
