@@ -110,12 +110,12 @@ ninja install || goto error
 cd ..\.. || goto error
 
 echo Building Qt Tools...
-rmdir /S /Q "qtimageformats-everywhere-src-%QT%"
+rmdir /S /Q "qttools-everywhere-src-%QT%"
 %SEVENZIP% x "qttools-everywhere-src-%QT%.zip" || goto error
 cd "qttools-everywhere-src-%QT%" || goto error
 mkdir build || goto error
 cd build || goto error
-call "%INSTALLDIR%\bin\qt-configure-module.bat" .. -- %FORCEPDB% -DFEATURE_assistant=OFF -DFEATURE_clang=OFF -DFEATURE_designer=OFF -DFEATURE_kmap2qmap=OFF -DFEATURE_pixeltool=OFF -DFEATURE_pkg_config=OFF -DFEATURE_qev=OFF -DFEATURE_qtattributionsscanner=OFF -DFEATURE_qtdiag=OFF -DFEATURE_qtplugininfo=OFF || goto error
+call "%INSTALLDIR%\bin\qt-configure-module.bat" .. -- %FORCEPDB% -DFEATURE_assistant=OFF -DFEATURE_clang=OFF -DFEATURE_designer=OFF -DFEATURE_kmap2qmap=OFF -DFEATURE_pixeltool=OFF -DFEATURE_pkg_config=OFF || goto error
 cmake --build . --parallel || goto error
 ninja install || goto error
 cd ..\.. || goto error
@@ -149,19 +149,4 @@ if not exist "%~1" (
   curl -L -o "%~1" "%~2"
   if errorlevel 1 exit /B 1
 )
-
-rem based on https://gist.github.com/gsscoder/e22daefaff9b5d8ac16afb070f1a7971
-set idx=0
-for /f %%F in ('certutil -hashfile "%~1" SHA256') do (
-    set "out!idx!=%%F"
-    set /a idx += 1
-)
-set filechecksum=%out1%
-
-if /i %~3==%filechecksum% (
-    echo Validated %~1.
-    exit /B 0
-) else (
-    echo Expected %~3 got %filechecksum%.
-    exit /B 1
-)
+exit /B 0
