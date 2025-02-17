@@ -14,6 +14,15 @@ message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
+# Add the path where DetectPageSize.cmake is located
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
+
+# Include the DetectPageSize module
+include(DetectPageSize)
+
+# Call the function and store the result in PAGE_SIZE
+detect_page_size(PAGE_SIZE)
+
 # Function to find and add all CMake configuration directories
 function(find_and_add_cmake_paths)
     set(SEARCH_DIRS 
