@@ -11,35 +11,35 @@ on:
         description: 'Package Name'
         required: true
         default: 'Flamenco'
-        
+
 jobs:
   build:
     runs-on: windows-latest
-    
+
     env:
       SolutionPath: duckstation.sln
       Platform: x64
       Configuration: ReleaseUWP
       BuildMode: SideLoadOnly
-      AppxBundle: Never      
+      AppxBundle: Never
       ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
       ProjectDirectory: .\src/duckstation-uwp/
       PackageOutputRootDir: C:\AppPackage
-      PackageOutputDir: Flamenco 
+      PackageOutputDir: Flamenco
 
-    steps:            
+    steps:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-             
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          submodules: true 
+          submodules: true
           fetch-depth: 0
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
-        
+
       - name: Restore NuGet Packages
         run: |
           nuget restore $env:SolutionPath
@@ -56,6 +56,22 @@ jobs:
         id: set_package_name
         run: |
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+        shell: pwsh
+
+      - name: Cache Dependencies
+        id: cache-deps
+        uses: actions/cache@v3.3.2
+        with:
+          path: |       
+            dep/msvc/deps-x64
+          key: deps-${{ hashFiles('scripts/build-dependencies-windows-x64.bat') }}
+
+      - name: Build X64 Dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        env:
+          DEBUG: 0
+        run: scripts/build-dependencies-windows-x64.bat
+        shell: pwsh
 
       - name: App Build
         run: |
@@ -91,7 +107,7 @@ jobs:
             exit 1
           }
         shell: pwsh
-          
+
       - name: Create Archive
         run: |
           $PackagePath = "${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}"
@@ -105,7 +121,7 @@ jobs:
             exit 1
           }
         shell: pwsh
-       
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
