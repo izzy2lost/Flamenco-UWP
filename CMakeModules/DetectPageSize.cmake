@@ -1,0 +1,10 @@
+function(detect_page_size var)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+        set(${var} 4096 PARENT_SCOPE)  # Default Windows page size
+    elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+        execute_process(COMMAND getconf PAGE_SIZE OUTPUT_VARIABLE PAGESIZE OUTPUT_STRIP_TRAILING_WHITESPACE)
+        set(${var} ${PAGESIZE} PARENT_SCOPE)
+    else()
+        message(FATAL_ERROR "Unsupported platform for detect_page_size")
+    endif()
+endfunction()
