@@ -1,6 +1,15 @@
+function(disable_compiler_warnings_for_target target)
+  if (MSVC)
+    target_compile_options(${target} PRIVATE /W0)
+  else()
+    target_compile_options(${target} PRIVATE -w)
+  endif()
+endfunction()
+
 cmake_minimum_required(VERSION 3.10)
 project(zstd LANGUAGES C CXX ASM)
 enable_language(C ASM)
+
 add_library(zstd
   lib/common/debug.c
   lib/common/entropy_common.c
