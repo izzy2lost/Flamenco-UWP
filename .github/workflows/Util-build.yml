@@ -35,9 +35,9 @@ jobs:
           nuget restore $env:SolutionPath
         shell: pwsh
 
-      - name: Install CMake
-        uses: lukka/get-cmake@v3
-
+      - name: get-cmake
+        uses: lukka/get-cmake@v3.31.5
+  
       - name: Build zlib Library
         run: |
           cmake -S dep/zlib -B build/zlib
