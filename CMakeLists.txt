@@ -19,7 +19,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # Include the DetectPageSize module
 include(DetectPageSize)
-include(CompilerWarnings)
 
 # Call the function and store the result in PAGE_SIZE
 detect_page_size(PAGE_SIZE)
