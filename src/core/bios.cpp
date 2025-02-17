@@ -13,6 +13,22 @@
 #include <cerrno>
 Log_SetChannel(BIOS);
 
+#ifdef WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP)  // UWP-Specific Code
+
+#include <winrt/Windows.Storage.h>
+#include <winrt/Windows.ApplicationModel.h>
+
+std::wstring GetUWPBIOSPath() {
+    try {
+        auto localFolder = winrt::Windows::Storage::ApplicationData::Current().LocalFolder();
+        return localFolder.Path() + L"\\bios\\";
+    } catch (...) {
+        return L""; // Handle errors properly
+    }
+}
+
+#endif
+
 static constexpr BIOS::Hash MakeHashFromString(const char str[])
 {
   BIOS::Hash h{};
@@ -31,6 +47,8 @@ static constexpr BIOS::Hash MakeHashFromString(const char str[])
   }
   return h;
 }
+
+// The rest of the file remains unchanged...
 
 std::string BIOS::Hash::ToString() const
 {
