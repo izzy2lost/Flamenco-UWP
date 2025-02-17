@@ -14,9 +14,7 @@ message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
-# Pull in modules.
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake/Qt6/Qt6Config.cmake" "${CMAKE_SOURCE_DIR}/CMakeModules")
-include(DuckStationUtils)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake/Qt6" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # Platform detection.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
