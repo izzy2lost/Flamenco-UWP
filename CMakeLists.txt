@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31.5)
+cmake_minimum_required(VERSION 3.27)
 
 project(Flamenco-UWP C CXX)
 
@@ -13,7 +13,7 @@ set(CMAKE_VS_PLATFORM_TOOLSET "v143")
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
 set(CMAKE_GENERATOR_PLATFORM "x64")
 
-# Set module and prefix paths for dependencies (example)
+# Set module and prefix paths for dependencies
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
 list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/Windows Kits/10")
 
@@ -35,11 +35,12 @@ add_subdirectory(src)
 # Add the path where DetectPageSize.cmake is located
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
-# Include the DetectPageSize module
+# Include the DetectPageSize module **before** calling it
 include(DetectPageSize)
 
 # Call the function and store the result in PAGE_SIZE
 detect_page_size(PAGE_SIZE)
+message(STATUS "Detected page size: ${PAGE_SIZE}")
 
 # Function to find and add all CMake configuration directories
 function(find_and_add_cmake_paths)
@@ -71,11 +72,8 @@ function(find_and_add_cmake_paths)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
 endfunction()
 
-detect_page_size(PAGE_SIZE)
-message(STATUS "Detected page size: ${PAGE_SIZE}")
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
-include(DetectPageSize)
+# Call the function to populate module paths
+find_and_add_cmake_paths()
 
 # Platform detection.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
