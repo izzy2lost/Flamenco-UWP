@@ -14,7 +14,7 @@ message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
-# Function to find all CMake config directories and add them to CMAKE_MODULE_PATH
+# Function to find and add all CMake configuration directories
 function(find_and_add_cmake_paths)
     set(SEARCH_DIRS 
         "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake"
@@ -24,11 +24,12 @@ function(find_and_add_cmake_paths)
 
     foreach(dir ${SEARCH_DIRS})
         if(EXISTS "${dir}")
-            file(GLOB CONFIG_DIRS "${dir}/*")
-            foreach(config_dir ${CONFIG_DIRS})
-                if(EXISTS "${config_dir}/")
-                    list(APPEND CMAKE_MODULE_PATH "${config_dir}")
-                endif()
+            # Recursively find all directories containing *.cmake files
+            file(GLOB_RECURSE CONFIG_FILES "${dir}/*.cmake")
+            
+            foreach(config_file ${CONFIG_FILES})
+                get_filename_component(config_dir ${config_file} DIRECTORY)
+                list(APPEND CMAKE_MODULE_PATH "${config_dir}")
             endforeach()
         endif()
     endforeach()
