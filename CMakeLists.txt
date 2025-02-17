@@ -17,10 +17,9 @@ message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 # Add the path where DetectPageSize.cmake is located
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
-# Include the file with the function definition
-include(CompilerWarnings)
 # Include the DetectPageSize module
 include(DetectPageSize)
+include(CompilerWarnings)
 
 # Call the function and store the result in PAGE_SIZE
 detect_page_size(PAGE_SIZE)
