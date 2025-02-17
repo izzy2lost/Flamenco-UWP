@@ -26,12 +26,12 @@ jobs:
 
       - name: Setup MinGW
         run: |
-          choco install mingw
+          choco install mingw -y
         shell: pwsh
 
       - name: Add MinGW to PATH
         run: |
-          echo "::add-path::C:\tools\mingw64\bin"
+          echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
         shell: pwsh
 
       - name: Setup NuGet
@@ -42,29 +42,29 @@ jobs:
           nuget restore $env:SolutionPath
         shell: pwsh
 
-      - name: get-cmake
+      - name: Get CMake
         uses: lukka/get-cmake@v3.31.5
 
       - name: Build zlib Library
         run: |
           cmake -G "MinGW Makefiles" -S dep/zlib -B build/zlib
-          cmake --build build/zlib --config $env:Configuration
+          cmake --build build/zlib
         shell: pwsh
 
       - name: Build zstd Library
         run: |
           cmake -G "MinGW Makefiles" -S dep/zstd -B build/zstd
-          cmake --build build/zstd --config $env:Configuration
+          cmake --build build/zstd
         shell: pwsh
 
       - name: Build util Project
         run: |
           cmake -G "MinGW Makefiles" -S . -B build/util
-          cmake --build build/util --config $env:Configuration
+          cmake --build build/util
         shell: pwsh
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: util Build
-          path: build/util
+          path: build/util/**
