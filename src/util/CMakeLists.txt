@@ -1,3 +1,48 @@
+ target_link_libraries(util PRIVATE ${DBUS_LINK_LIBRARIES})
+
+  if(LINUX)
+    target_link_libraries(util PRIVATE UDEV::UDEV)
+  endif()
+endif()
+
+if(NOT WIN32 AND NOT ANDROID)
+  target_sources(util PRIVATE
+    http_downloader_curl.cpp
+    http_downloader_curl.h
+  )
+  target_link_libraries(util PRIVATE
+    CURL::libcurl
+  )
+endif()
+
+function(add_util_resources target)
+  if(APPLE)
+    get_property(UTIL_METAL_SOURCES GLOBAL PROPERTY UTIL_METAL_SOURCES)
+    add_metal_sources(${target} ${UTIL_METAL_SOURCES})
+
+    # Copy MoltenVK into the bundle
+    unset(MOLTENVK_PATH CACHE)
+    find_file(MOLTENVK_PATH NAMES
+      libMoltenVK.dylib
+      lib/libMoltenVK.dylib
+    )
+    if (MOLTENVK_PATH)
+      target_sources(${target} PRIVATE "${MOLTENVK_PATH}")
+      set_source_files_properties("${MOLTENVK_PATH}" PROPERTIES MACOSX_PACKAGE_LOCATION Frameworks)
+      message(STATUS "Using MoltenVK from ${MOLTENVK_PATH}")
+    else()
+      message(WARNING "MoltenVK not found in path, it will depend on the target system having it.")
+    endif()
+  endif()
+endfunction()
+cmake_minimum_required(VERSION 3.10)
+project(util)
+
+if(MINGW)
+  set(CMAKE_C_COMPILER "gcc")
+  set(CMAKE_CXX_COMPILER "g++")
+endif()
+
 add_library(util
   audio_stream.cpp
   audio_stream.h
@@ -196,9 +241,7 @@ if(ENABLE_SDL2)
   target_compile_definitions(util PUBLIC "ENABLE_SDL2=1")
   target_link_libraries(util PUBLIC SDL2::SDL2)
 
-  # Copy bundled SDL2 to output on Windows.
   if(WIN32)
-    # Copy SDL2 DLL to binary directory.
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
       get_property(SDL2_DLL_PATH TARGET SDL2::SDL2 PROPERTY IMPORTED_LOCATION_DEBUG)
     else()
@@ -300,7 +343,6 @@ function(add_util_resources target)
     get_property(UTIL_METAL_SOURCES GLOBAL PROPERTY UTIL_METAL_SOURCES)
     add_metal_sources(${target} ${UTIL_METAL_SOURCES})
 
-    # Copy MoltenVK into the bundle
     unset(MOLTENVK_PATH CACHE)
     find_file(MOLTENVK_PATH NAMES
       libMoltenVK.dylib
