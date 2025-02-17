@@ -58,6 +58,10 @@ jobs:
           echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
 
+      - name: Set SDL2 Path
+        run: |
+          cmake -DCMAKE_PREFIX_PATH="dep/msvc/deps-x64/include/SDL2" ..
+
       - name: Configure CMake
         run: |
           cmake -DSDL2_DIR=dep/msvc/deps-x64/include/SDL2 -S . -B build
