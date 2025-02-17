@@ -1,3 +1,12 @@
+# Function to disable compiler warnings for a specific target
+function(disable_compiler_warnings_for_target target)
+    if(MSVC)
+        target_compile_options(${target} PRIVATE /W0)
+    else()
+        target_compile_options(${target} PRIVATE -w)
+    endif()
+endfunction()
+
 set(FMT_INSTALL OFF CACHE BOOL "")
 add_subdirectory(fmt EXCLUDE_FROM_ALL)
 disable_compiler_warnings_for_target(fmt)
