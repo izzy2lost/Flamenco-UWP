@@ -225,10 +225,6 @@ else()
   message(FATAL_ERROR "Unknown system processor: ${CMAKE_SYSTEM_PROCESSOR}")
 endif()
 
-# Detect page size if needed.
-detect_page_size()
-
-
 # We don't need exceptions, disable them to save a bit of code size.
 if(MSVC)
   string(REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
