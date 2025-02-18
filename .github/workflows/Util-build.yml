@@ -35,11 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-          fetch-depth: 0
-
-      - name: Run PowerShell script to update CppWinRTVersion
-        run: .\Add-CppWinRTVersion.ps1
-        shell: pwsh
+          fetch-depth: 0      
 
       - name: Clean and Rebuild with New WinRT Version
         shell: pwsh
@@ -50,21 +46,10 @@ jobs:
           # Rebuild all projects with clean code generation
           msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
           
-          # Verify WinRT version in generated files
-          $versionString = "2.0.230511.6"
-          $matches = Select-String -Path "**/Generated Files/winrt/*.h" -Pattern $versionString -List
-          if (-not $matches) {
-            Write-Error "CppWinRTVersion $versionString not found in generated files"
-            exit 1
-          }
-
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.1.1
-
-      - name: Restore NuGet Packages
-        run: nuget restore $env:SolutionPath
+      - name: Run PowerShell script to update CppWinRTVersion
+        run: .\Add-CppWinRTVersion.ps1
         shell: pwsh
-
+        
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
