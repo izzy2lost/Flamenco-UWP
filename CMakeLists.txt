@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.27)
-
 project(Flamenco-UWP C CXX)
 
 # Set UWP-specific configurations
@@ -12,18 +11,35 @@ set(CMAKE_VS_PLATFORM_TOOLSET "v143")
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
 set(CMAKE_GENERATOR_PLATFORM "x64")
 
-# Use GitHub Actions' predefined environment variables
+# --- Begin: Locate cl.exe for VS2022 on GitHub Actions ---
 if(DEFINED ENV{VSINSTALLDIR} AND DEFINED ENV{VCToolsVersion})
+    message(STATUS "Using VS environment variables.")
     set(VS_INSTALL_DIR "$ENV{VSINSTALLDIR}")
     set(VS_TOOLS_VERSION "$ENV{VCToolsVersion}")
-
-    # Construct the full path to cl.exe
     set(CMAKE_CXX_COMPILER "${VS_INSTALL_DIR}/VC/Tools/MSVC/${VS_TOOLS_VERSION}/bin/Hostx64/x64/cl.exe")
-    
-    message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
 else()
-    message(FATAL_ERROR "Could not find Visual Studio installation. Ensure the GitHub Actions runner has VS2022 installed.")
+    message(STATUS "VS environment variables not found; using vswhere to locate Visual Studio 2022.")
+    # Run vswhere.exe to find the VS2022 installation path
+    execute_process(
+        COMMAND "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+        OUTPUT_VARIABLE VS_INSTALL_DIR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(VS_INSTALL_DIR STREQUAL "")
+        message(FATAL_ERROR "Could not find Visual Studio installation via vswhere. Ensure that VS2022 is installed.")
+    endif()
+    # Get the latest MSVC version folder
+    file(GLOB MSVC_DIR "${VS_INSTALL_DIR}/VC/Tools/MSVC/*")
+    if(MSVC_DIR)
+        list(SORT MSVC_DIR)
+        list(GET MSVC_DIR -1 LATEST_MSVC_DIR)
+        set(CMAKE_CXX_COMPILER "${LATEST_MSVC_DIR}/bin/Hostx64/x64/cl.exe")
+    else()
+        message(FATAL_ERROR "Could not find MSVC directory in ${VS_INSTALL_DIR}/VC/Tools/MSVC")
+    endif()
 endif()
+message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
+# --- End: Locate cl.exe ---
 
 # Set module and prefix paths for dependencies
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
@@ -36,13 +52,14 @@ message(STATUS "CMake Host System: ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "Processor Architecture: ${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMake Generator: ${CMAKE_GENERATOR}")
-message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Source Directory: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
 
-# Enable UWP support
+# (Other configurations, subdirectory additions, and module includes follow...)
 add_subdirectory(src)
+
+# (Additional CMake code such as including custom modules, detecting page size, etc.)
 
 # Add the path where DetectPageSize.cmake is located
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
