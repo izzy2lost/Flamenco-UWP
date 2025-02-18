@@ -61,8 +61,21 @@ message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
 add_subdirectory(src)
 
 # (Additional CMake code such as including custom modules, detecting page size, etc.)
+# Add SDL2 include and library paths
+list(APPEND CMAKE_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
+list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib")
 
-# Add the path where DetectPageSize.cmake is located
+# Find SDL2
+find_package(SDL2 REQUIRED)
+
+# Print SDL2 include and library paths for debugging
+message(STATUS "SDL2 Include Path: ${SDL2_INCLUDE_DIRS}")
+message(STATUS "SDL2 Library Path: ${SDL2_LIBRARIES}")
+
+# Link SDL2 to your project (modify as needed)
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+# Add the path where DetectPageSize.cmake is locates
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # Include the DetectPageSize module **before** calling it
