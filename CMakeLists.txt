@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(Flamenco-UWP C CXX)
+project(Release-UWP C CXX)
 
 # Set UWP-specific configurations
 set(CMAKE_SYSTEM_NAME WindowsStore)
