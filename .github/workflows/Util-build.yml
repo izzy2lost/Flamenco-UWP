@@ -41,6 +41,23 @@ jobs:
         run: .\Add-CppWinRTVersion.ps1
         shell: pwsh
 
+      - name: Clean and Rebuild with New WinRT Version
+        shell: pwsh
+        run: |
+          # Remove all build artifacts and generated files
+          Get-ChildItem -Recurse -Include bin, obj, 'Generated Files' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    
+          # Rebuild all projects with clean code generation
+          msbuild YourSolution.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
+    
+          # Optional: Verify WinRT version in generated files
+          $versionString = "2.0.230511.6"
+          $matches = Select-String -Path "**/Generated Files/winrt/*.h" -Pattern $versionString -List
+          if (-not $matches) {
+              Write-Error "CppWinRTVersion $versionString not found in generated files"
+              exit 1
+          }
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
