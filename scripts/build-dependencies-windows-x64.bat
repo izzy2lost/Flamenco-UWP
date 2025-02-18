@@ -22,10 +22,17 @@ if defined DEBUG (
 pushd %~dp0
 set "SCRIPTDIR=%CD%"
 cd ..\dep\msvc
+
 mkdir deps-build
 cd deps-build || goto error
 set "BUILDDIR=%CD%"
 cd ..
+
+rem Check if deps-x64 exists, and if so, delete it
+if exist deps-x64 (
+    rmdir /s /q deps-x64
+)
+
 mkdir deps-x64
 cd deps-x64 || goto error
 set "INSTALLDIR=%CD%"
