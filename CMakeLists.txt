@@ -79,7 +79,7 @@ message(STATUS "Source Directory: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
 
 # (Other configurations, subdirectory additions, and module includes follow...)
-add_subdirectory(src)
+add_subdirectory(uwp)
 
 # (Additional CMake code such as including custom modules, detecting page size, etc.)
 # Add SDL2 include and library paths
