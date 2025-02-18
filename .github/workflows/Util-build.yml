@@ -37,19 +37,22 @@ jobs:
           submodules: true
           fetch-depth: 0      
 
-      - name: Clean and Rebuild with New WinRT Version
+      - name: Clean it up!
         shell: pwsh
         run: |
           # Remove all build artifacts and generated files
           Get-ChildItem -Recurse -Include bin, obj, 'Generated Files' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
           
-          # Rebuild all projects with clean code generation
-          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
-          
       - name: Run PowerShell script to update CppWinRTVersion
         run: .\Add-CppWinRTVersion.ps1
         shell: pwsh
-        
+
+      - name: Rebuild All Projects
+        shell: pwsh
+        run: | 
+          # Rebuild all projects with clean code generation
+          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
+                  
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
