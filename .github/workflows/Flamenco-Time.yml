@@ -40,7 +40,7 @@ jobs:
         with:
           path: |
             dep/msvc/deps-x64
-          key: deps-${{'scripts/build-dependencies-windows-x64.bat') }}
+          key: deps-${{'scripts/build-dependencies-windows-x64.bat'}}
 
       - name: Build X64 Dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
