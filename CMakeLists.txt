@@ -102,13 +102,6 @@ message(STATUS "SDL2 Library Path: ${SDL2_LIBRARIES}")
 target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 
-# Include the DetectPageSize module **before** calling it
-include(DetectPageSize)
-
-# Call the function and store the result in PAGE_SIZE
-detect_page_size(PAGE_SIZE)
-message(STATUS "Detected page size: ${PAGE_SIZE}")
-
 # Function to find and add all CMake configuration directories
 function(find_and_add_cmake_paths)
     set(SEARCH_DIRS 
