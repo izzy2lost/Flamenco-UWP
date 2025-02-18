@@ -34,6 +34,18 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Install MSYS2 and pkg-config
+        run: |
+          pacman -S --noconfirm --needed pkgconf
+        shell: msys2 {0}
+
+      - name: Setup MinGW64 Shell
+        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+
+      - name: Verify pkg-config
+        run: pkg-config --version
+        shell: msys2 {0}
+
       - name: Build X64 Dependencies
         env:
           DEBUG: 0
