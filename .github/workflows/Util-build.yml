@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag Name'
+        description: "Tag Name"
         required: true
-        default: 'v1.0.0'
+        default: "v1.0.0"
       package_name:
-        description: 'Package Name'
+        description: "Package Name"
         required: true
-        default: 'Flamenco'
+        default: "Flamenco"
 
 jobs:
   build:
@@ -46,37 +46,44 @@ jobs:
         run: |
           # Remove all build artifacts and generated files
           Get-ChildItem -Recurse -Include bin, obj, 'Generated Files' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    
+          
           # Rebuild all projects with clean code generation
-          msbuild YourSolution.sln /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
-    
-          # Optional: Verify WinRT version in generated files
+          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
+          
+          # Verify WinRT version in generated files
           $versionString = "2.0.230511.6"
           $matches = Select-String -Path "**/Generated Files/winrt/*.h" -Pattern $versionString -List
           if (-not $matches) {
-              Write-Error "CppWinRTVersion $versionString not found in generated files"
-              exit 1
+            Write-Error "CppWinRTVersion $versionString not found in generated files"
+            exit 1
           }
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
       - name: Restore NuGet Packages
-        run: |
-          nuget restore $env:SolutionPath
+        run: nuget restore $env:SolutionPath
         shell: pwsh
 
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
-          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
+          $cert = New-SelfSignedCertificate `
+            -CertStoreLocation "Cert:\CurrentUser\My" `
+            -Subject "CN=MyUWPCert" `
+            -KeyAlgorithm RSA `
+            -KeyLength 2048 `
+            -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" `
+            -KeyExportPolicy Exportable `
+            -NotAfter (Get-Date).AddYears(1) `
+            -Type CodeSigningCert
+
           echo "THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
         shell: pwsh
 
       - name: Set Package Name
         id: set_package_name
-        run: |
-          echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+        run: echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
         shell: pwsh
 
       - name: App Build
