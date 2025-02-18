@@ -17,7 +17,6 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SolutionPath: duckstation.sln
       Platform: x64
       Configuration: ReleaseUWP
       BuildMode: SideLoadOnly
@@ -28,32 +27,15 @@ jobs:
       PackageOutputDir: Flamenco
 
     steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0      
 
-      - name: Clean it up!
-        shell: pwsh
-        run: |
-          # Remove all build artifacts and generated files
-          Get-ChildItem -Recurse -Include bin, obj, 'Generated Files' | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-          
-      - name: Run PowerShell script to update CppWinRTVersion
-        run: .\Add-CppWinRTVersion.ps1
-        shell: pwsh
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
 
-      - name: Rebuild All Projects
-        shell: pwsh
-        run: | 
-          # Rebuild all projects with clean code generation
-          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m
-        continue-on-error: true
-  
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
@@ -66,7 +48,6 @@ jobs:
             -KeyExportPolicy Exportable `
             -NotAfter (Get-Date).AddYears(1) `
             -Type CodeSigningCert
-
           echo "THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
         shell: pwsh
 
@@ -77,7 +58,7 @@ jobs:
 
       - name: App Build
         run: |
-          msbuild $env:SolutionPath `
+          msbuild $env:ProjectPath `
             /t:Rebuild `
             /p:Platform=$env:Platform `
             /p:Configuration=$env:Configuration `
@@ -86,8 +67,6 @@ jobs:
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
             /p:AppxPackageTestDir="${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}" `
             /p:AppxPackageSigningEnabled=true `
-            /p:CppWinRTUseLatest=false `
-            /p:CppWinRTVersion=2.0.230511.6 `
             /restore
         shell: pwsh
 
