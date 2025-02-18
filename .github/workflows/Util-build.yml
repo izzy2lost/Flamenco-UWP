@@ -51,7 +51,7 @@ jobs:
         shell: pwsh
         run: | 
           # Rebuild all projects with clean code generation
-          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false /v:m continue-on-error: true
+          msbuild $env:SolutionPath /t:Rebuild /p:Configuration=Release /p:Platform=x64 /p:RestorePackages=false continue-on-error: true /v:m 
                   
       - name: Generate Self-Signed Certificate
         id: generate_cert
