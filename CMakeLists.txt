@@ -12,20 +12,18 @@ set(CMAKE_VS_PLATFORM_TOOLSET "v143")
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
 set(CMAKE_GENERATOR_PLATFORM "x64")
 
-# Dynamically find Visual Studio 2022's cl.exe
-execute_process(
-    COMMAND "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Auxiliary/Build/vcvars64.bat" && set
-    OUTPUT_VARIABLE VS_ENV_VARS
-    ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+# Use GitHub Actions' predefined environment variables
+if(DEFINED ENV{VSINSTALLDIR} AND DEFINED ENV{VCToolsVersion})
+    set(VS_INSTALL_DIR "$ENV{VSINSTALLDIR}")
+    set(VS_TOOLS_VERSION "$ENV{VCToolsVersion}")
 
-# Extract VC_InstallDir from the environment variables
-string(REGEX MATCH "VC_InstallDir=([^\r\n]*)" _match "${VS_ENV_VARS}")
-set(VS_CL_PATH "${CMAKE_MATCH_1}/Tools/MSVC/*/bin/Hostx64/x64/cl.exe")
-
-# Set the compiler path
-set(CMAKE_CXX_COMPILER "${VS_CL_PATH}")
-message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
+    # Construct the full path to cl.exe
+    set(CMAKE_CXX_COMPILER "${VS_INSTALL_DIR}/VC/Tools/MSVC/${VS_TOOLS_VERSION}/bin/Hostx64/x64/cl.exe")
+    
+    message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
+else()
+    message(FATAL_ERROR "Could not find Visual Studio installation. Ensure the GitHub Actions runner has VS2022 installed.")
+endif()
 
 # Set module and prefix paths for dependencies
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
