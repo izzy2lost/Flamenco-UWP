@@ -55,6 +55,16 @@ jobs:
         id: set_package_name
         run: echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
+          
+# Include directories and link SDL2
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+
+# Automatically add dependencies
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui OpenGL::GL)
 
       - name: CMake Configure
         run: |
