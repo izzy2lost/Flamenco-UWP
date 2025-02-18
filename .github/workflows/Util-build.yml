@@ -37,6 +37,10 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Run PowerShell script to update CppWinRTVersion
+        run: ./update-cppwinrt.ps1
+        shell: pwsh
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
