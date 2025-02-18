@@ -1,4 +1,4 @@
-name: Flamenco Builder
+name: Build ReleaseUWP
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ on:
       package_name:
         description: 'Package Name'
         required: true
-        default: 'Flamenco'
+        default: 'ReleaseUWP'
 
 jobs:
   build:
@@ -23,50 +23,55 @@ jobs:
       BuildMode: SideLoadOnly
       AppxBundle: Never
       ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
-      ProjectDirectory: .\src/duckstation-uwp/
+      ProjectDirectory: .\src\duckstation-uwp\
       PackageOutputRootDir: C:\AppPackage
-      PackageOutputDir: Flamenco
+      PackageOutputDir: ReleaseUWP
 
-    steps:      
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           submodules: true
           fetch-depth: 0
-          
-      - name: Add msbuild to PATH
+
+      - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
         
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
       - name: Restore NuGet Packages
-        run: |
-          nuget restore $env:SolutionPath
+        run: nuget restore $env:SolutionPath
         shell: pwsh
 
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
           $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
-          echo "THUMBPRINT=$($cert.Thumbprint)" >> $env:GITHUB_ENV
+          echo "THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
       - name: Set Package Name
         id: set_package_name
-        run: |
-          echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" >> $GITHUB_ENV
+        run: echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      - name: CMake Config  
+      - name: CMake Configure
         run: |
-          cmake -G "Visual Studio 17 2022" -DCMAKE_SYSTEM_NAME=WindowsStore -A x64 -DCMAKE_SYSTEM_VERSION="10.0.19041.0" -DCMAKE_SYSTEM_PROCESSOR="x86_64" -DCMAKE_PREFIX_PATH="Qt6" -B "build" .
-          
-      - name: Build project
-        run: |
-          cmake --build build --config Release
+          cmake -G "Visual Studio 17 2022" `
+                -DCMAKE_SYSTEM_NAME=WindowsStore `
+                -A x64 `
+                -DCMAKE_SYSTEM_VERSION="10.0.19041.0" `
+                -DCMAKE_SYSTEM_PROCESSOR="x86_64" `
+                -DCMAKE_PREFIX_PATH="Qt6" `
+                -B build
+        shell: pwsh
 
-      - name: App Build
+      - name: Build Project
+        run: cmake --build build --config Release
+        shell: pwsh
+
+      - name: App Package Build
         run: |
           msbuild $env:SolutionPath `
             /t:Rebuild `
@@ -75,7 +80,7 @@ jobs:
             /p:UapAppxPackageBuildMode=$env:BuildMode `
             /p:AppxBundle=$env:AppxBundle `
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
-            /p:AppxPackageTestDir="${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}" `
+            /p:AppxPackageTestDir="$env:PackageOutputRootDir\$env:PACKAGE_NAME" `
             /p:AppxPackageSigningEnabled=true `
             /p:CppWinRTUseLatest=false `
             /p:CppWinRTVersion=2.0.230511.6 `
@@ -84,17 +89,17 @@ jobs:
 
       - name: Clean the Package
         run: |
-          $PackagePath = "${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}"
+          $PackagePath = "$env:PackageOutputRootDir\$env:PACKAGE_NAME"
           if (Test-Path $PackagePath) {
             Write-Host "Cleaning package directory: $PackagePath"
-            Remove-Item -Recurse -path "$PackagePath\Add-AppDevPackage.resources" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\TelemetryDependencies" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\Dependencies\arm" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\Dependencies\arm64" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\Dependencies\x86" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\Dependencies\Win32" -ErrorAction SilentlyContinue
-            Remove-Item -path "$PackagePath\Add-AppDevPackage.ps1" -ErrorAction SilentlyContinue
-            Remove-Item -Recurse -path "$PackagePath\Install.ps1" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Add-AppDevPackage.resources" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\TelemetryDependencies" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Dependencies\arm" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Dependencies\arm64" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Dependencies\x86" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Dependencies\Win32" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Add-AppDevPackage.ps1" -ErrorAction SilentlyContinue
+            Remove-Item -Recurse -Force -Path "$PackagePath\Install.ps1" -ErrorAction SilentlyContinue
           } else {
             Write-Host "Package path does not exist: $PackagePath"
             exit 1
@@ -103,12 +108,12 @@ jobs:
 
       - name: Create Archive
         run: |
-          $PackagePath = "${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}"
+          $PackagePath = "$env:PackageOutputRootDir\$env:PACKAGE_NAME"
           if (Test-Path $PackagePath) {
             Write-Host "Creating archive for: $PackagePath"
-            Compress-Archive -Path "$PackagePath\*" -DestinationPath "${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}.zip"
+            Compress-Archive -Path "$PackagePath\*" -DestinationPath "$env:PackageOutputRootDir\$env:PACKAGE_NAME.zip"
             Write-Host "Contents of package output directory after archiving:"
-            Get-ChildItem -Path "${{ env.PackageOutputRootDir }}" -Recurse
+            Get-ChildItem -Path "$env:PackageOutputRootDir" -Recurse
           } else {
             Write-Host "Package path does not exist for archiving: $PackagePath"
             exit 1
@@ -119,4 +124,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.inputs.package_name }} Build
-          path: ${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}
+          path: ${{ env.PackageOutputRootDir }}\${{ env.PACKAGE_NAME }}.zip
