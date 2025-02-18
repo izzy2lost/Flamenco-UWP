@@ -7,8 +7,8 @@ project(ReleaseUWP C CXX)
 set(SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
 set(SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/SDL2.lib")
 
-# Add your executable or library (using Release-UWP as the target name)
-add_executable(Release-UWP ${SOURCES})
+# Add your executable or library (using ReleaseUWP as the target name)
+add_executable(ReleaseUWP ${SOURCES})
 
 # Ensure CMake recognizes SDL2 paths
 find_path(SDL2_INCLUDE_DIRS SDL.h PATHS ${SDL2_INCLUDE_DIR})
@@ -17,10 +17,6 @@ find_library(SDL2_LIBRARIES SDL2 PATHS ${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib
 # Debug messages
 message(STATUS "SDL2 Include Path: ${SDL2_INCLUDE_DIRS}")
 message(STATUS "SDL2 Library Path: ${SDL2_LIBRARIES}")
-
-# Link SDL2 to your project
-target_include_directories(Release-UWP PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(Release-UWP PRIVATE ${SDL2_LIBRARIES})
 
 # Set UWP-specific configurations
 set(CMAKE_SYSTEM_NAME WindowsStore)
@@ -78,10 +74,6 @@ message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Source Directory: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
 
-# (Other configurations, subdirectory additions, and module includes follow...)
-add_subdirectory(uwp)
-
-# (Additional CMake code such as including custom modules, detecting page size, etc.)
 # Add SDL2 include and library paths
 list(APPEND CMAKE_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
 list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib")
