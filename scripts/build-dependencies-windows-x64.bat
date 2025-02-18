@@ -41,12 +41,12 @@ set QT=6.6.2
 set QTMINOR=6.6
 set SDL=SDL2-2.30.1
 
-call :downloadfile "%SDL%.zip" "https://libsdl.org/release/%SDL%.zip" || goto error
-call :downloadfile "qtbase-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtbase-everywhere-src-%QT%.zip" || goto error
-call :downloadfile "qtimageformats-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtimageformats-everywhere-src-%QT%.zip" || goto error
-call :downloadfile "qtsvg-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qtsvg-everywhere-src-%QT%.zip" || goto error
-call :downloadfile "qttools-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qttools-everywhere-src-%QT%.zip" || goto error
-call :downloadfile "qttranslations-everywhere-src-%QT%.zip" "https://download.qt.io/official_releases/qt/%QTMINOR%/%QT%/submodules/qttranslations-everywhere-src-%QT%.zip" || goto error
+call :downloadfile "%SDL%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/2.30.1/SDL2-2.30.1.zip" || goto error
+call :downloadfile "qtbase-everywhere-src-%QT%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/6.6.2-base/qtbase-everywhere-src-6.6.2.zip" || goto error
+call :downloadfile "qtimageformats-everywhere-src-%QT%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/6.6.2-image/qtimageformats-everywhere-src-6.6.2.zip" || goto error
+call :downloadfile "qtsvg-everywhere-src-%QT%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/6.6.2-qtsvg/qtsvg-everywhere-src-6.6.2.zip" || goto error
+call :downloadfile "qttools-everywhere-src-%QT%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/6.6.2-tools/qttools-everywhere-src-6.6.2.zip" || goto error
+call :downloadfile "qttranslations-everywhere-src-%QT%.zip" "https://github.com/izzy2lost/Flamenco-UWP/releases/download/6.6.2-trans/qttranslations-everywhere-src-6.6.2.zip" || goto error
 
 if %DEBUG%==1 (
   echo Building debug and release libraries...
