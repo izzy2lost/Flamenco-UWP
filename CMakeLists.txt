@@ -42,6 +42,7 @@ message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
 # --- End: Locate cl.exe ---
 
 # Set module and prefix paths for dependencies
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
 list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/Windows Kits/10")
 
