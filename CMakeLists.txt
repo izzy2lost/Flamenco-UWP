@@ -3,20 +3,25 @@ cmake_minimum_required(VERSION 3.27)
 
 project(ReleaseUWP C CXX)
 
+# Locate SDL2 automatically
+find_package(SDL2 REQUIRED)
+
+# Include directories and link SDL2
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+
+# Automatically add dependencies
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
+find_package(OpenGL REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui OpenGL::GL)
+
 # Set SDL2 paths manually
 set(SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
 set(SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/SDL2.lib")
 
 # Add your executable or library (using ReleaseUWP as the target name)
 add_executable(ReleaseUWP ${SOURCES})
-
-# Ensure CMake recognizes SDL2 paths
-find_path(SDL2_INCLUDE_DIRS SDL.h PATHS ${SDL2_INCLUDE_DIR})
-find_library(SDL2_LIBRARIES SDL2 PATHS ${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib)
-
-# Debug messages
-message(STATUS "SDL2 Include Path: ${SDL2_INCLUDE_DIRS}")
-message(STATUS "SDL2 Library Path: ${SDL2_LIBRARIES}")
 
 # Set UWP-specific configurations
 set(CMAKE_SYSTEM_NAME WindowsStore)
@@ -28,41 +33,6 @@ set(CMAKE_VS_PLATFORM_TOOLSET "v143")
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
 set(CMAKE_GENERATOR_PLATFORM "x64")
 
-# --- Begin: Locate cl.exe for VS2022 on GitHub Actions ---
-if(DEFINED ENV{VSINSTALLDIR} AND DEFINED ENV{VCToolsVersion})
-    message(STATUS "Using VS environment variables.")
-    set(VS_INSTALL_DIR "$ENV{VSINSTALLDIR}")
-    set(VS_TOOLS_VERSION "$ENV{VCToolsVersion}")
-    set(CMAKE_CXX_COMPILER "${VS_INSTALL_DIR}/VC/Tools/MSVC/${VS_TOOLS_VERSION}/bin/Hostx64/x64/cl.exe")
-else()
-    message(STATUS "VS environment variables not found; using vswhere to locate Visual Studio 2022.")
-    # Run vswhere.exe to find the VS2022 installation path
-    execute_process(
-        COMMAND "C:/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-        OUTPUT_VARIABLE VS_INSTALL_DIR
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    if(VS_INSTALL_DIR STREQUAL "")
-        message(FATAL_ERROR "Could not find Visual Studio installation via vswhere. Ensure that VS2022 is installed.")
-    endif()
-    # Get the latest MSVC version folder
-    file(GLOB MSVC_DIR "${VS_INSTALL_DIR}/VC/Tools/MSVC/*")
-    if(MSVC_DIR)
-        list(SORT MSVC_DIR)
-        list(GET MSVC_DIR -1 LATEST_MSVC_DIR)
-        set(CMAKE_CXX_COMPILER "${LATEST_MSVC_DIR}/bin/Hostx64/x64/cl.exe")
-    else()
-        message(FATAL_ERROR "Could not find MSVC directory in ${VS_INSTALL_DIR}/VC/Tools/MSVC")
-    endif()
-endif()
-message(STATUS "Using C++ Compiler: ${CMAKE_CXX_COMPILER}")
-# --- End: Locate cl.exe ---
-
-# Set module and prefix paths for dependencies
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/cmake")
-list(APPEND CMAKE_PREFIX_PATH "C:/Program Files (x86)/Windows Kits/10")
-
 # Print environment details for debugging
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 message(STATUS "CMake System Name: ${CMAKE_SYSTEM_NAME}")
@@ -73,26 +43,6 @@ message(STATUS "CMake Generator: ${CMAKE_GENERATOR}")
 message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "Source Directory: ${CMAKE_SOURCE_DIR}")
 message(STATUS "Build Directory: ${CMAKE_BINARY_DIR}")
-
-# Add SDL2 include and library paths
-list(APPEND CMAKE_INCLUDE_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
-list(APPEND CMAKE_LIBRARY_PATH "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib")
-
-# Manually specify SDL2 include and library paths
-set(SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
-set(SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/SDL2.lib")
-
-# Ensure CMake recognizes SDL2
-find_path(SDL2_INCLUDE_DIRS SDL.h PATHS ${SDL2_INCLUDE_DIR})
-find_library(SDL2_LIBRARIES SDL2 PATHS ${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib)
-
-# Debug messages
-message(STATUS "SDL2 Include Path: ${SDL2_INCLUDE_DIRS}")
-message(STATUS "SDL2 Library Path: ${SDL2_LIBRARIES}")
-
-# Link SDL2 to your project
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 
 # Function to find and add all CMake configuration directories
 function(find_and_add_cmake_paths)
