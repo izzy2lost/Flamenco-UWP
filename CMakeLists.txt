@@ -3,7 +3,7 @@ project(Flamenco-UWP C CXX)
 
 # Set UWP-specific configurations
 set(CMAKE_SYSTEM_NAME WindowsStore)
-set(CMAKE_SYSTEM_PROCESSOR x64)
+set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_SYSTEM_VERSION 10.0.19041.0)
