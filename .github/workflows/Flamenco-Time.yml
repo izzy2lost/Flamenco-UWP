@@ -34,16 +34,7 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Cache Dependencies
-        id: cache-deps
-        uses: actions/cache@v3.3.2
-        with:
-          path: |
-            dep/msvc/deps-x64
-          key: deps-${{'scripts/build-dependencies-windows-x64.bat'}}
-
       - name: Build X64 Dependencies
-        if: steps.cache-deps.outputs.cache-hit != 'true'
         env:
           DEBUG: 0
         run: scripts/build-dependencies-windows-x64.bat
