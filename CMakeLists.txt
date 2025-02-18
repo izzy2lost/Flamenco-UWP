@@ -1,7 +1,7 @@
 # Define your project
 cmake_minimum_required(VERSION 3.27)
 
-project(Release-UWP C CXX)
+project(ReleaseUWP C CXX)
 
 # Set SDL2 paths manually
 set(SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
@@ -26,7 +26,7 @@ target_link_libraries(Release-UWP PRIVATE ${SDL2_LIBRARIES})
 set(CMAKE_SYSTEM_NAME WindowsStore)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "ReleaseUWP")
 set(CMAKE_SYSTEM_VERSION 10.0.19041.0)
 set(CMAKE_VS_PLATFORM_TOOLSET "v143")
 set(CMAKE_VS_WINDOWS_TARGET_PLATFORM_VERSION "10.0.19041.0")
