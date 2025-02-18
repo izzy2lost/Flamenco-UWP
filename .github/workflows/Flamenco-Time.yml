@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       tag_name:
-        description: 'Tag Name'
+        description: "Tag Name"
         required: true
-        default: 'v1.0.0'
+        default: "v1.0.0"
       package_name:
-        description: 'Package Name'
+        description: "Package Name"
         required: true
-        default: 'ReleaseUWP'
+        default: "ReleaseUWP"
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-        
+
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.1.1
 
@@ -55,16 +55,6 @@ jobs:
         id: set_package_name
         run: echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
-          
-# Include directories and link SDL2
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
-
-# Automatically add dependencies
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
-find_package(OpenGL REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui OpenGL::GL)
 
       - name: CMake Configure
         run: |
