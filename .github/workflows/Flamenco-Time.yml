@@ -34,6 +34,20 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Cache Dependencies
+        id: cache-deps
+        uses: actions/cache@v3.3.2
+        with:
+          path: |
+            dep/msvc/deps-x64
+          key: deps-${{'scripts/build-dependencies-windows-x64.bat') }}
+
+      - name: Build X64 Dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        env:
+          DEBUG: 0
+        run: scripts/build-dependencies-windows-x64.bat
+
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
@@ -47,7 +61,9 @@ jobs:
       - name: Generate Self-Signed Certificate
         id: generate_cert
         run: |
-          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
+          $cert = New-SelfSignedCertificate -CertStoreLocation "Cert:\CurrentUser\My" -Subject "CN=MyUWPCert" `
+            -KeyAlgorithm RSA -KeyLength 2048 -Provider "Microsoft Enhanced RSA and AES Cryptographic Provider" `
+            -KeyExportPolicy Exportable -NotAfter (Get-Date).AddYears(1) -Type CodeSigningCert
           echo "THUMBPRINT=$($cert.Thumbprint)" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
