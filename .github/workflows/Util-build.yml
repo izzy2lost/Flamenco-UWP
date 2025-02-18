@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run PowerShell script to update CppWinRTVersion
-        run: ./update-cppwinrt.ps1
+        run: .\Add-CppWinRTVersion.ps1
         shell: pwsh
 
       - name: Setup NuGet
