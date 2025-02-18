@@ -35,9 +35,10 @@ jobs:
           fetch-depth: 0
 
       - name: Install MSYS2 and pkg-config
-        run: |
-          pacman -S --noconfirm --needed pkgconf
-        shell: msys2 {0}
+        uses: msys2/setup-msys2@v2
+        with:
+          install: pkgconf
+          path-type: minimal
 
       - name: Setup MinGW64 Shell
         run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
