@@ -15,18 +15,6 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
-    env:
-      SolutionPath: duckstation.sln
-      Platform: x64
-      Configuration: ReleaseUWP
-      BuildMode: SideLoadOnly
-      AppxBundle: Never
-      ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
-      ProjectDirectory: .\src\duckstation-uwp\
-      PackageOutputRootDir: C:\AppPackage
-      PackageOutputDir: ReleaseUWP
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -55,8 +43,16 @@ jobs:
       - name: Create Dependencies Archive
         shell: cmd
         run: |
-          "C:\Program Files\7-Zip\7z.exe" a "%GITHUB_WORKSPACE%\deps-x64.7z" "%GITHUB_WORKSPACE%\duckstation-uwp\dep\msvc\deps-x64"
-    
+          cd \dep\msvc
+          "C:\Program Files\7-Zip\7z.exe" a "%GITHUB_WORKSPACE%\deps-x64.7z" .\deps-x64
+
+      - name: Upload Dependencies Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deps-x64
+          path: deps-x64.7z
+          if-no-files-found: error
+
       - name: Debug - List Dependencies Directory
         shell: cmd
         run: dir /s "%GITHUB_WORKSPACE%\duckstation-uwp\dep\msvc"
