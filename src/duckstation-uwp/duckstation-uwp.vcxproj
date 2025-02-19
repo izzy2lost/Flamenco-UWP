@@ -514,7 +514,6 @@
     <Text Include="resources\sounds\achievements\README.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="duckstation-uwp_TemporaryKey.pfx" />
     <None Include="resources\gamedb.yaml">
       <DeploymentContent>true</DeploymentContent>
     </None>
