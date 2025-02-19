@@ -50,7 +50,7 @@ jobs:
       - name: Build X64 Dependencies
         env:
           DEBUG: 0
-        run: scripts/build-dependencies-windows-x64.bat
+        run: scripts/build-dependencies-windows-x64-uwp.bat
           
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
