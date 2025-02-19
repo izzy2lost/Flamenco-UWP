@@ -56,33 +56,28 @@ if %DEBUG%==1 (
 
 set FORCEPDB=-DCMAKE_SHARED_LINKER_FLAGS_RELEASE="/DEBUG"
 
-echo Building SDL for UWP...
+echo Building SDL...
 rmdir /S /Q "%SDL%"
 %SEVENZIP% x "%SDL%.zip" || goto error
 cd "%SDL%" || goto error
+
+rem Build SDL using MSBuild instead of CMake
+set SDL_SLN="VisualC-WinRT/SDL-UWP.sln"
+
 if %DEBUG%==1 (
-  cmake -B build-debug ^
-    -DCMAKE_BUILD_TYPE=Debug ^
-    -DCMAKE_SYSTEM_NAME=WindowsStore ^
-    -DCMAKE_SYSTEM_VERSION=10.0 ^
-    -DSDL_UWP=ON ^
-    -DCMAKE_INSTALL_PREFIX="%INSTALLDIR%" ^
-    -G Ninja || goto error
-  cmake --build build-debug --parallel || goto error
-  ninja -C build-debug install || goto error
-  copy build-debug\SDL2d.pdb "%INSTALLDIR%\bin" || goto error
+  echo Building SDL Debug...
+  msbuild %SDL_SLN% /p:Configuration=Debug /p:Platform=x64 || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
 )
-cmake -B build ^
-  -DCMAKE_BUILD_TYPE=Release ^
-  -DCMAKE_SYSTEM_NAME=WindowsStore ^
-  -DCMAKE_SYSTEM_VERSION=10.0 ^
-  -DSDL_UWP=ON ^
-  %FORCEPDB% ^
-  -DCMAKE_INSTALL_PREFIX="%INSTALLDIR%" ^
-  -G Ninja || goto error
-cmake --build build --parallel || goto error
-ninja -C build install || goto error
-copy build\SDL2.pdb "%INSTALLDIR%\bin" || goto error
+
+echo Building SDL Release...
+msbuild %SDL_SLN% /p:Configuration=Release /p:Platform=x64 || goto error
+copy "VisualC-WinRT\x64\Release\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
+copy "VisualC-WinRT\x64\Release\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
+copy "VisualC-WinRT\x64\Release\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
+
 cd .. || goto error
 
 set QTBUILDSPEC=^
