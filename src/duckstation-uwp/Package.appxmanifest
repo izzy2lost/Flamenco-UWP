@@ -26,7 +26,6 @@
 
   <Resources>
     <Resource Language="x-generate" />
-    <Resource Path="Assets/bios/" />
   </Resources>
 
   <Applications>
