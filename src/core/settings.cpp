@@ -1736,7 +1736,7 @@ std::string EmuFolders::UserResources;
 
 void EmuFolders::SetDefaults()
 {
-  Bios = Path::Combine(DataRoot, "bios");
+  Bios = Path::Combine(DataRoot, "Assets/bios");
   Cache = Path::Combine(DataRoot, "cache");
   Cheats = Path::Combine(DataRoot, "cheats");
   Covers = Path::Combine(DataRoot, "covers");
@@ -1764,7 +1764,7 @@ static std::string LoadPathFromSettings(SettingsInterface& si, const std::string
 
 void EmuFolders::LoadConfig(SettingsInterface& si)
 {
-  Bios = LoadPathFromSettings(si, DataRoot, "BIOS", "SearchDirectory", "bios");
+  Bios = LoadPathFromSettings(si, DataRoot, "BIOS", "SearchDirectory", "Assets/bios");
   Cache = LoadPathFromSettings(si, DataRoot, "Folders", "Cache", "cache");
   Cheats = LoadPathFromSettings(si, DataRoot, "Folders", "Cheats", "cheats");
   Covers = LoadPathFromSettings(si, DataRoot, "Folders", "Covers", "covers");
