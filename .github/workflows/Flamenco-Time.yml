@@ -62,8 +62,7 @@ jobs:
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
             /p:AppxPackageTestDir="$env:PackageOutputRootDir\$env:PACKAGE_NAME" `
             /p:AppxPackageSigningEnabled=true `
-            /p:CppWinRTUseLatest=false `
-            /p:CppWinRTVersion=2.0.230511.6 `
+            /p:WindowsTargetPlatformVersion=10.0.19041.0 `
             /restore
         shell: pwsh
 
