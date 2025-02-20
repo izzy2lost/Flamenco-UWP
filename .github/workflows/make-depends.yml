@@ -21,7 +21,7 @@ jobs:
 
       - name: Build SDL2-UWP
         run: |
-          cd SDL2/VisualC-WinRT
+          cd VisualC-WinRT
           msbuild SDL-UWP.sln /p:Configuration=Release /p:Platform=x64
 
       - name: Upload SDL2-UWP Artifacts
