@@ -33,24 +33,6 @@ jobs:
         with:
           submodules: true
           fetch-depth: 0
-
-      - name: Install MSYS2 and pkg-config
-        uses: msys2/setup-msys2@v2
-        with:
-          install: pkgconf
-          path-type: minimal
-
-      - name: Setup MinGW64 Shell
-        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-
-      - name: Verify pkg-config
-        run: pkg-config --version
-        shell: msys2 {0}
-
-      - name: Build X64 Dependencies
-        env:
-          DEBUG: 0
-        run: scripts/build-dependencies-windows-x64-uwp.bat
           
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
