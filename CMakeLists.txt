@@ -1,7 +1,7 @@
 # Define your project
 cmake_minimum_required(VERSION 3.27)
 
-project(ReleaseUWP C CXX)
+project(Flamenco C CXX)
 
 # Locate SDL2 automatically
 find_package(SDL2 REQUIRED)
