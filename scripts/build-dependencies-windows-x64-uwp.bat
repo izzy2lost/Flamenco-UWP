@@ -56,45 +56,30 @@ if %DEBUG%==1 (
 
 set FORCEPDB=-DCMAKE_SHARED_LINKER_FLAGS_RELEASE="/DEBUG"
 
-echo Building SDL...
-rmdir /S /Q "%SDL%"
-%SEVENZIP% x "%SDL%.zip" || goto error
-cd "%SDL%" || goto error
+@echo off
+setlocal
 
-rem Build SDL using MSBuild instead of CMake
-set SDL_SLN="VisualC-WinRT/SDL-UWP.sln"
-
-if %DEBUG%==1 (
-  echo Building SDL Debug...
-  msbuild %SDL_SLN% /p:Configuration=Debug /p:Platform=x64 || goto error
-  
-  rem Check if the files exist before copying
-  if not exist "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.dll" (
-    echo Error: SDL2.dll not found in Debug build directory.
-    goto error
-  )
-  
-  echo Copying Debug SDL files...
-  copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
-  copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
-  copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
+REM Ensure INSTALLDIR is set
+if "%INSTALLDIR%"=="" (
+    echo ERROR: INSTALLDIR is not set.
+    exit /b 1
 )
 
-echo Building SDL Release...
-msbuild %SDL_SLN% /p:Configuration=Release /p:Platform=x64 || goto error
+REM Ensure destination directories exist
+mkdir "%INSTALLDIR%\bin" 2>nul
+mkdir "%INSTALLDIR%\lib" 2>nul
 
-rem Check if the files exist before copying
-if not exist "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" (
-  echo Error: SDL2.dll not found in Release build directory.
-  goto error
-)
+REM Copy files with full paths and error handling
+copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
+copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
+copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
 
-echo Copying Release SDL files...
-copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
-copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
-copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
+echo Files copied successfully.
+exit /b 0
 
-cd .. || goto error
+:error
+echo ERROR: Failed to copy one or more files.
+exit /b 1
 
 set QTBUILDSPEC=^
   -DQT_QMAKE_TARGET_MKSPEC=winrt-x64-msvc ^
