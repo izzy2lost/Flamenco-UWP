@@ -13,11 +13,11 @@ jobs:
 
       - name: Download SDL2-UWP
         run: |
-          curl -L -o SDL2-2.30.1.zip https://github.com/izzy2lost/Flamenco-UWP/releases/download/2.30.1/SDL2-2.30.1.zip
+          curl -L https://github.com/izzy2lost/Flamenco-UWP/releases/download/2.30.1/SDL2-2.30.1.zip
 
       - name: Extract SDL2
         run: |
-          7z x SDL2-2.30.1.zip -oSDL2-2.30.1
+          7z x SDL2-2.30.1.zip
 
       - name: Build SDL2-UWP
         run: |
