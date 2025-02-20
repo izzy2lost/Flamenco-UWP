@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "dependencies": [
     { "name": "sdl2", "version>=": "2.30.1" },
-    { "name": "qtbase", "version>=": "6.6.2" },
-    { "name": "qtsvg", "version>=": "6.6.2" },
-    { "name": "qttools", "version>=": "6.6.2" },
-    { "name": "qtimageformats", "version>=": "6.6.2" },
-    { "name": "qttranslations", "version>=": "6.6.2" }
+    { "name": "qtbase", "version>=": "6.6.3" },
+    { "name": "qtsvg", "version>=": "6.6.3" },
+    { "name": "qttools", "version>=": "6.6.3" },
+    { "name": "qtimageformats", "version>=": "6.6.3" },
+    { "name": "qttranslations", "version>=": "6.6.3" }
   ],
   "builtin-baseline": "74ec888e385d189b42d6b398d0bbaa6f1b1d3b0e"
 }
