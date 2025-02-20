@@ -11,6 +11,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
       - name: Download SDL2-UWP
         run: |
           curl -L -o SDL2-2.30.1.zip https://github.com/izzy2lost/Flamenco-UWP/releases/download/2.30.1/SDL2-2.30.1.zip
