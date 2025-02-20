@@ -56,30 +56,29 @@ if %DEBUG%==1 (
 
 set FORCEPDB=-DCMAKE_SHARED_LINKER_FLAGS_RELEASE="/DEBUG"
 
-@echo off
-setlocal
+echo Building SDL...
+rmdir /S /Q "%SDL%"
+%SEVENZIP% x "%SDL%.zip" || goto error
+cd "%SDL%" || goto error
 
-REM Ensure INSTALLDIR is set
-if "%INSTALLDIR%"=="" (
-    echo ERROR: INSTALLDIR is not set.
-    exit /b 1
+rem Build SDL using MSBuild instead of CMake
+set SDL_SLN="VisualC-WinRT/SDL-UWP.sln"
+
+if %DEBUG%==1 (
+  echo Building SDL Debug...
+  msbuild %SDL_SLN% /p:Configuration=Debug /p:Platform=x64 || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
+  copy "VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
 )
 
-REM Ensure destination directories exist
-mkdir "%INSTALLDIR%\bin" 2>nul
-mkdir "%INSTALLDIR%\lib" 2>nul
+echo Building SDL Release...
+msbuild %SDL_SLN% /p:Configuration=Release /p:Platform=x64 || goto error
+copy "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
+copy "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
+copy "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
 
-REM Copy files with full paths and error handling
-copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
-copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
-copy /y "VisualC-WinRT\x64\Release\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
-
-echo Files copied successfully.
-exit /b 0
-
-:error
-echo ERROR: Failed to copy one or more files.
-exit /b 1
+cd .. || goto error
 
 set QTBUILDSPEC=^
   -DQT_QMAKE_TARGET_MKSPEC=winrt-x64-msvc ^
