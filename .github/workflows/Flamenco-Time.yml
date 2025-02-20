@@ -41,7 +41,6 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg C:\vcpkg
           cd C:\vcpkg
-          git checkout 74ec888e385d189b42d6b398d0bbaa6f1b1d3b0e
           .\bootstrap-vcpkg.bat
         shell: pwsh
 
