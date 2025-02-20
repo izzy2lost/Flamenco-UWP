@@ -61,7 +61,7 @@ jobs:
             /p:PackageCertificateThumbprint="${{ env.THUMBPRINT }}" `
             /p:AppxPackageTestDir="$env:PackageOutputRootDir\$env:PACKAGE_NAME" `
             /p:AppxPackageSigningEnabled=true `
-            /p:WindowsTargetPlatformVersion=10.0.19041.0 `
+            /p:WindowsTargetPlatformVersion=10.0.22621.0 `
             /p:WholeProgramOptimization=false `
             /restore
         shell: pwsh
