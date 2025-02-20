@@ -1,0 +1,13 @@
+{
+  "name": "duckstation-uwp",
+  "version": "1.0.0",
+  "dependencies": [
+    { "name": "sdl2", "version>=": "2.30.1" },
+    { "name": "qtbase", "version>=": "6.6.2" },
+    { "name": "qtsvg", "version>=": "6.6.2" },
+    { "name": "qttools", "version>=": "6.6.2" },
+    { "name": "qtimageformats", "version>=": "6.6.2" },
+    { "name": "qttranslations", "version>=": "6.6.2" }
+  ],
+  "builtin-baseline": "ca7c14e"
+}
