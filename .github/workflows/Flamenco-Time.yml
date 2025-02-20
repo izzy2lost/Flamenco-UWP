@@ -10,7 +10,7 @@ on:
       package_name:
         description: "Package Name"
         required: true
-        default: "ReleaseUWP"
+        default: "Flamenco"
 
 jobs:
   build:
