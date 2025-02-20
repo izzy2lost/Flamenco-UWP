@@ -44,9 +44,10 @@ jobs:
           .\bootstrap-vcpkg.bat
         shell: pwsh
 
-      - name: Install Dependencies (Classic Mode)
+      - name: Install Dependencies with vcpkg
         run: |
-          C:\vcpkg\vcpkg install sdl2:x64-uwp qtbase:x64-uwp qtsvg:x64-uwp qttools:x64-uwp qtimageformats:x64-uwp qttranslations:x64-uwp --triplet x64-uwp
+          cd $env:GITHUB_WORKSPACE  # Ensure you're in the repo directory
+          C:\vcpkg\vcpkg install --triplet x64-uwp
         shell: pwsh
 
       - name: Set vcpkg Toolchain
