@@ -37,22 +37,23 @@ jobs:
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
-      - name: Install vcpkg (pinned to a specific commit)
+      - name: Set Up vcpkg
         run: |
-          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+          git clone https://github.com/microsoft/vcpkg C:\vcpkg
           cd C:\vcpkg
-          git checkout 2024.02.14  # Example: Use a stable vcpkg version
+          git checkout ca7c14e
           .\bootstrap-vcpkg.bat
+        shell: pwsh
 
-      - name: Install dependencies via vcpkg (specific versions)
+      - name: Install Dependencies with vcpkg
         run: |
-          C:\vcpkg\vcpkg install sdl2:x64-uwp@2.30.1
-          C:\vcpkg\vcpkg install qtbase:x64-uwp@6.6.2
-          C:\vcpkg\vcpkg install qtsvg:x64-uwp@6.6.2
-          C:\vcpkg\vcpkg install qttools:x64-uwp@6.6.2
-          C:\vcpkg\vcpkg install qtimageformats:x64-uwp@6.6.2
-          C:\vcpkg\vcpkg install qttranslations:x64-uwp@6.6.2
-          C:\vcpkg\vcpkg integrate install
+          cd $env:GITHUB_WORKSPACE
+          C:\vcpkg\vcpkg install --manifest --triplet x64-uwp
+        shell: pwsh
+
+      - name: Set vcpkg Toolchain
+        run: echo "CMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake" | Out-File -FilePath $env:GITHUB_ENV -Append
+        shell: pwsh
 
       - name: Generate Self-Signed Certificate
         id: generate_cert
