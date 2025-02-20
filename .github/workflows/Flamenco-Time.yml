@@ -25,7 +25,7 @@ jobs:
       ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
       ProjectDirectory: .\src\duckstation-uwp\
       PackageOutputRootDir: C:\AppPackage
-      PackageOutputDir: Flamenco
+      PackageOutputDir: Flamenco-UWP
 
     steps:
       - name: Checkout Repository
