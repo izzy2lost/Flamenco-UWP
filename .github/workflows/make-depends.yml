@@ -1,58 +1,31 @@
-name: Make Depends
+name: Build SDL2-UWP
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: "Tag Name"
-        required: true
-        default: "v1.0.0"
-      package_name:
-        description: "Package Name"
-        required: true
-        default: "ReleaseUWP"
+  workflow_dispatch:  # Manually triggerable
 
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-        with:
-          submodules: true
-          fetch-depth: 0
 
-      - name: Install MSYS2 and pkg-config
-        uses: msys2/setup-msys2@v2
-        with:
-          install: pkgconf
-          path-type: minimal
-
-      - name: Setup MinGW64 Shell
-        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-
-      - name: Verify pkg-config
-        run: pkg-config --version
-        shell: msys2 {0}
-
-      - name: Build X64 Dependencies
-        env:
-          DEBUG: 0
-        run: scripts/build-dependencies-windows-x64.bat
-
-      - name: Create Dependencies Archive
-        shell: cmd
+      - name: Download SDL2-UWP
         run: |
-          cd \dep\msvc
-          "C:\Program Files\7-Zip\7z.exe" a "%GITHUB_WORKSPACE%\deps-x64.7z" .\deps-x64
+          curl -L -o SDL2.zip https://github.com/izzy2lost/Flamenco-UWP/releases/download/2.30.1/SDL2-2.30.1.zip
 
-      - name: Upload Dependencies Artifact
+      - name: Extract SDL2
+        run: |
+          7z x SDL2.zip -oSDL2
+
+      - name: Build SDL2-UWP
+        run: |
+          cd SDL2/VisualC-WinRT
+          msbuild SDL-UWP.sln /p:Configuration=Release /p:Platform=x64
+
+      - name: Upload SDL2-UWP Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: deps-x64
-          path: deps-x64.7z
-          if-no-files-found: error
-
-      - name: Debug - List Dependencies Directory
-        shell: cmd
-        run: dir /s "%GITHUB_WORKSPACE%\duckstation-uwp\dep\msvc"
+          name: SDL2-UWP
+          path: SDL2/VisualC-WinRT/x64/Release/
