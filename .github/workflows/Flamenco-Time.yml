@@ -1,4 +1,4 @@
-name: Build ReleaseUWP
+name: Build Flamenco
 
 on:
   workflow_dispatch:
