@@ -12,13 +12,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
 
 # Automatically add dependencies
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui)
-find_package(OpenGL REQUIRED)
-
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Widgets Qt6::Gui OpenGL::GL)
-
-# Set SDL2 paths manually
-set(SDL2_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/include/SDL2")
-set(SDL2_LIBRARY "${CMAKE_SOURCE_DIR}/dep/msvc/deps-x64/lib/SDL2.lib")
 
 # Add your executable or library (using ReleaseUWP as the target name)
 add_executable(ReleaseUWP ${SOURCES})
@@ -83,10 +76,6 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
   set(FREEBSD TRUE)
 endif()
-
-# Renderer options.
-option(ENABLE_OPENGL "Build with OpenGL renderer" ON)
-option(ENABLE_VULKAN "Build with Vulkan renderer" ON)
 
 # Global options.
 if(NOT ANDROID)
