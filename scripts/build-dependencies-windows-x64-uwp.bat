@@ -67,6 +67,14 @@ set SDL_SLN="VisualC-WinRT/SDL-UWP.sln"
 if %DEBUG%==1 (
   echo Building SDL Debug...
   msbuild %SDL_SLN% /p:Configuration=Debug /p:Platform=x64 || goto error
+  
+  rem Check if the files exist before copying
+  if not exist "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.dll" (
+    echo Error: SDL2.dll not found in Debug build directory.
+    goto error
+  )
+  
+  echo Copying Debug SDL files...
   copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
   copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
   copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Debug\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
@@ -74,6 +82,14 @@ if %DEBUG%==1 (
 
 echo Building SDL Release...
 msbuild %SDL_SLN% /p:Configuration=Release /p:Platform=x64 || goto error
+
+rem Check if the files exist before copying
+if not exist "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" (
+  echo Error: SDL2.dll not found in Release build directory.
+  goto error
+)
+
+echo Copying Release SDL files...
 copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.dll" "%INSTALLDIR%\bin\" || goto error
 copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.lib" "%INSTALLDIR%\lib\" || goto error
 copy "D:\a\Flamenco-UWP\Flamenco-UWP\dep\msvc\deps-build\SDL2-2.30.1\VisualC-WinRT\x64\Release\SDL-UWP\SDL2.pdb" "%INSTALLDIR%\bin\" || goto error
