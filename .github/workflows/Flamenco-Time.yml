@@ -47,6 +47,7 @@ jobs:
       - name: Install Dependencies with vcpkg
         run: |
           cd $env:GITHUB_WORKSPACE  # Ensure you're in the repo directory
+          C:\vcpkg\vcpkg install qtbase:x64-uwp --allow-unsupported
           C:\vcpkg\vcpkg install --triplet x64-uwp
         shell: pwsh
 
