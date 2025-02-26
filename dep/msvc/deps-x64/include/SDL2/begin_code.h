@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -36,8 +36,6 @@
 #ifndef SDL_DEPRECATED
 #  if defined(__GNUC__) && (__GNUC__ >= 4)  /* technically, this arrived in gcc 3.1, but oh well. */
 #    define SDL_DEPRECATED __attribute__((deprecated))
-#  elif defined(_MSC_VER)
-#    define SDL_DEPRECATED __declspec(deprecated)
 #  else
 #    define SDL_DEPRECATED
 #  endif
@@ -57,7 +55,7 @@
 #  ifdef DLL_EXPORT
 #   define DECLSPEC __declspec(dllexport)
 #  else
-#   define DECLSPEC
+#   define DECLSPEC __declspec(dllexport)
 #  endif
 # elif defined(__OS2__)
 #   ifdef BUILD_SDL

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -240,7 +240,7 @@ struct SDL_SysWMinfo
 #if defined(SDL_VIDEO_DRIVER_WINRT)
         struct
         {
-            IInspectable * window;      /**< The WinRT CoreWindow */
+            void* window;      /**< The WinRT CoreWindow */
         } winrt;
 #endif
 #if defined(SDL_VIDEO_DRIVER_X11)

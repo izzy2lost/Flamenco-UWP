@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -57,14 +57,12 @@ typedef enum
     SDL_PIXELTYPE_PACKED8,
     SDL_PIXELTYPE_PACKED16,
     SDL_PIXELTYPE_PACKED32,
+    SDL_PIXELTYPE_PACKED64,
     SDL_PIXELTYPE_ARRAYU8,
     SDL_PIXELTYPE_ARRAYU16,
     SDL_PIXELTYPE_ARRAYU32,
     SDL_PIXELTYPE_ARRAYF16,
-    SDL_PIXELTYPE_ARRAYF32,
-
-    /* This must be at the end of the list to avoid breaking the existing ABI */
-    SDL_PIXELTYPE_INDEX2
+    SDL_PIXELTYPE_ARRAYF32
 } SDL_PixelType;
 
 /** Bitmap pixel order, high bit -> low bit. */
@@ -114,7 +112,8 @@ typedef enum
     SDL_PACKEDLAYOUT_565,
     SDL_PACKEDLAYOUT_8888,
     SDL_PACKEDLAYOUT_2101010,
-    SDL_PACKEDLAYOUT_1010102
+    SDL_PACKEDLAYOUT_1010102,
+    SDL_PACKEDLAYOUT_16161616
 } SDL_PackedLayout;
 
 #define SDL_DEFINE_PIXELFOURCC(A, B, C, D) SDL_FOURCC(A, B, C, D)
@@ -137,7 +136,6 @@ typedef enum
 #define SDL_ISPIXELFORMAT_INDEXED(format)   \
     (!SDL_ISPIXELFORMAT_FOURCC(format) && \
      ((SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX1) || \
-      (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX2) || \
       (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX4) || \
       (SDL_PIXELTYPE(format) == SDL_PIXELTYPE_INDEX8)))
 
@@ -181,12 +179,6 @@ typedef enum
     SDL_PIXELFORMAT_INDEX1MSB =
         SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_1234, 0,
                                1, 0),
-    SDL_PIXELFORMAT_INDEX2LSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX2, SDL_BITMAPORDER_4321, 0,
-                               2, 0),
-    SDL_PIXELFORMAT_INDEX2MSB =
-        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX2, SDL_BITMAPORDER_1234, 0,
-                               2, 0),
     SDL_PIXELFORMAT_INDEX4LSB =
         SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_4321, 0,
                                4, 0),
@@ -279,6 +271,11 @@ typedef enum
     SDL_PIXELFORMAT_ARGB2101010 =
         SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB,
                                SDL_PACKEDLAYOUT_2101010, 32, 4),
+    SDL_PIXELFORMAT_RGBA16161616 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED64, SDL_PACKEDORDER_RGBA,
+                               SDL_PACKEDLAYOUT_16161616, 64, 4),
+
+
 
     /* Aliases for RGBA byte arrays of color data, for the current platform */
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -286,19 +283,11 @@ typedef enum
     SDL_PIXELFORMAT_ARGB32 = SDL_PIXELFORMAT_ARGB8888,
     SDL_PIXELFORMAT_BGRA32 = SDL_PIXELFORMAT_BGRA8888,
     SDL_PIXELFORMAT_ABGR32 = SDL_PIXELFORMAT_ABGR8888,
-    SDL_PIXELFORMAT_RGBX32 = SDL_PIXELFORMAT_RGBX8888,
-    SDL_PIXELFORMAT_XRGB32 = SDL_PIXELFORMAT_XRGB8888,
-    SDL_PIXELFORMAT_BGRX32 = SDL_PIXELFORMAT_BGRX8888,
-    SDL_PIXELFORMAT_XBGR32 = SDL_PIXELFORMAT_XBGR8888,
 #else
     SDL_PIXELFORMAT_RGBA32 = SDL_PIXELFORMAT_ABGR8888,
     SDL_PIXELFORMAT_ARGB32 = SDL_PIXELFORMAT_BGRA8888,
     SDL_PIXELFORMAT_BGRA32 = SDL_PIXELFORMAT_ARGB8888,
     SDL_PIXELFORMAT_ABGR32 = SDL_PIXELFORMAT_RGBA8888,
-    SDL_PIXELFORMAT_RGBX32 = SDL_PIXELFORMAT_XBGR8888,
-    SDL_PIXELFORMAT_XRGB32 = SDL_PIXELFORMAT_BGRX8888,
-    SDL_PIXELFORMAT_BGRX32 = SDL_PIXELFORMAT_XRGB8888,
-    SDL_PIXELFORMAT_XBGR32 = SDL_PIXELFORMAT_RGBX8888,
 #endif
 
     SDL_PIXELFORMAT_YV12 =      /**< Planar mode: Y + V + U  (3 planes) */
@@ -394,6 +383,7 @@ extern DECLSPEC const char* SDLCALL SDL_GetPixelFormatName(Uint32 format);
  *
  * \sa SDL_MasksToPixelFormatEnum
  */
+
 extern DECLSPEC SDL_bool SDLCALL SDL_PixelFormatEnumToMasks(Uint32 format,
                                                             int *bpp,
                                                             Uint32 * Rmask,

@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2024 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2023 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -54,7 +54,7 @@
 
 /* Useful headers */
 #define HAVE_DXGI_H 1
-#if !SDL_WINAPI_FAMILY_PHONE
+#if WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 #define HAVE_XINPUT_H 1
 #endif
 
@@ -161,11 +161,11 @@
 #define SDL_AUDIO_DRIVER_DUMMY  1
 
 /* Enable various input drivers */
-#if SDL_WINAPI_FAMILY_PHONE
+#if WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP
 #define SDL_JOYSTICK_DISABLED 1
 #define SDL_HAPTIC_DISABLED 1
 #else
-#define SDL_JOYSTICK_VIRTUAL    1
+//#define SDL_JOYSTICK_VIRTUAL    1
 #if (NTDDI_VERSION >= NTDDI_WIN10)
 #define SDL_JOYSTICK_WGI    1
 #define SDL_HAPTIC_DISABLED 1
@@ -197,20 +197,28 @@
 #define SDL_TIMER_WINDOWS   1
 
 /* Enable various video drivers */
-#define SDL_VIDEO_DRIVER_WINRT  1
-#define SDL_VIDEO_DRIVER_DUMMY  1
+#define SDL_VIDEO_DRIVER_WINRT 1
+//#define SDL_VIDEO_DRIVER_DUMMY  1
 
 /* Enable OpenGL ES 2.0 (via a modified ANGLE library) */
-#define SDL_VIDEO_OPENGL_ES2 1
-#define SDL_VIDEO_OPENGL_EGL 1
+//#define SDL_VIDEO_OPENGL_ES2 0
+//#define SDL_VIDEO_OPENGL_EGL 0
 
 /* Enable appropriate renderer(s) */
-#define SDL_VIDEO_RENDER_D3D11  1
+//#define SDL_VIDEO_RENDER_D3D11 0
 
 /* Disable D3D12 as it's not implemented for WinRT */
-/* #undef SDL_VIDEO_RENDER_D3D12 */
+//#define SDL_VIDEO_RENDER_D3D12  0
 
-#ifdef SDL_VIDEO_OPENGL_ES2
+#define SDL_VIDEO_OPENGL 1
+#define SDL_VIDEO_RENDER_OGL 1
+#define SDL_VIDEO_OPENGL_WGL 1
+
+#define __XBOXSERIES__ 1
+#define SDL_VIDEO_DRIVER_KEYBOARD_WINRT 1
+#define SDL_VIDEO_DRIVER_POINTER_WINRT 1
+
+#if SDL_VIDEO_OPENGL_ES2
 #define SDL_VIDEO_RENDER_OGL_ES2 1
 #endif
 
