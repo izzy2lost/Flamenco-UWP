@@ -49,7 +49,6 @@ jobs:
           cmake -G "Visual Studio 17 2022" -A x64 `
                 -DCMAKE_SYSTEM_NAME=WindowsStore `
                 -DCMAKE_SYSTEM_VERSION="10.0.22621.0" `  # Match main project's SDK version
-                -DSDL_UWP=ON `
                 -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/dep/msvc/deps-x64" ..
 
           # Build and install to ensure proper file structure
