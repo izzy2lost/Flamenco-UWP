@@ -61,7 +61,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          cmake -B ${{ env.BUILD_DIR }} -S ${{ env.SOURCE_DIR }} `
+          cmake -B ${{ env.BUILD_DIR }} -S ${{ github.workspace }} `
             -G "Visual Studio 17 2022" `
             -A ${{ env.Platform }} `
             -DCMAKE_BUILD_TYPE=${{ env.Configuration }} `
