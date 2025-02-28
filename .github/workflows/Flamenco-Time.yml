@@ -17,15 +17,14 @@ jobs:
     runs-on: windows-latest
 
     env:
-      SolutionPath: duckstation.sln
       Platform: x64
       Configuration: ReleaseUWP
       BuildMode: SideLoadOnly
       AppxBundle: Never
-      ProjectPath: src/duckstation-uwp/duckstation-uwp.vcxproj
-      ProjectDirectory: .\src\duckstation-uwp\
       PackageOutputRootDir: C:\AppPackage
       PackageOutputDir: Flamenco-UWP
+      BUILD_DIR: ${{ github.workspace }}/build
+      SOURCE_DIR: ${{ github.workspace }}/src/duckstation-uwp
 
     steps:
       - name: Checkout Repository
@@ -60,9 +59,19 @@ jobs:
         run: echo "PACKAGE_NAME=${{ github.event.inputs.package_name }}_${{ github.event.inputs.tag_name }}" | Out-File -FilePath $env:GITHUB_ENV -Append
         shell: pwsh
 
-      - name: App Package Build
+      - name: Configure CMake
         run: |
-          msbuild $env:SolutionPath `
+          cmake -B ${{ env.BUILD_DIR }} -S ${{ env.SOURCE_DIR }} `
+            -G "Visual Studio 17 2022" `
+            -A ${{ env.Platform }} `
+            -DCMAKE_BUILD_TYPE=${{ env.Configuration }} `
+            -DENABLE_USER_BUILD=ON `
+            -DENABLE_QT_BUILD=ON
+        shell: pwsh
+
+      - name: Build with MSBuild
+        run: |
+          msbuild ${{ env.BUILD_DIR }}/duckstation.sln `
             /p:Platform=$env:Platform `
             /p:Configuration=$env:Configuration `
             /p:UapAppxPackageBuildMode=$env:BuildMode `
