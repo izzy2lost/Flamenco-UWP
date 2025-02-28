@@ -45,25 +45,27 @@ jobs:
           mkdir build
           cd build
 
+          # Use explicit Windows 10 SDK version compatible with UWP
           cmake -G "Visual Studio 17 2022" -A x64 `
-             -DCMAKE_SYSTEM_NAME=WindowsStore `
-             -DCMAKE_SYSTEM_VERSION=10.0 `
-             -DSDL_UWP=ON ..
+                -DCMAKE_SYSTEM_NAME=WindowsStore `
+                -DCMAKE_SYSTEM_VERSION=10.0.22621.0 `  # Match main project's SDK version
+                -DSDL_UWP=ON `
+                -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/dep/msvc/deps-x64" ..
+
+          # Build and install to ensure proper file structure
+          cmake --build . --config Release --target install
+
+          # Verify files were installed correctly
+          $sdlIncludePath = "${{ github.workspace }}/dep/msvc/deps-x64/include/SDL2"
+          $sdlLibPath = "${{ github.workspace }}/dep/msvc/deps-x64/lib"
+          $sdlBinPath = "${{ github.workspace }}/dep/msvc/deps-x64/bin"
     
-          cmake --build . --config Release
-
-          New-Item -ItemType Directory -Force -Path "${{ github.workspace }}/dep/msvc/deps-x64/include/SDL2"
-          New-Item -ItemType Directory -Force -Path "${{ github.workspace }}/dep/msvc/deps-x64/lib"
-          New-Item -ItemType Directory -Force -Path "${{ github.workspace }}/dep/msvc/deps-x64/bin"
-
-          Copy-Item -Path "../include/*" -Destination "${{ github.workspace }}/dep/msvc/deps-x64/include/SDL2/" -Recurse -Force
-          Copy-Item -Path "Release/SDL2.lib" -Destination "${{ github.workspace }}/dep/msvc/deps-x64/lib/"
-          Copy-Item -Path "Release/SDL2.dll" -Destination "${{ github.workspace }}/dep/msvc/deps-x64/bin/"
-          if (Test-Path "Release/SDL2main.lib") {
-          Copy-Item -Path "Release/SDL2main.lib" -Destination "${{ github.workspace }}/dep/msvc/deps-x64/lib/"
+          if (-not (Test-Path "$sdlLibPath/SDL2.lib")) {
+          Write-Error "SDL2.lib not found in expected location!"
+          exit 1
           }
         shell: pwsh
-
+  
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v1.1
 
