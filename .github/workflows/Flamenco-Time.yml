@@ -45,23 +45,23 @@ jobs:
           mkdir build
           cd build
 
-          # Use explicit Windows 10 SDK version compatible with UWP
+          # Explicit quoting for all version parameters
           cmake -G "Visual Studio 17 2022" -A x64 `
-                -DCMAKE_SYSTEM_NAME=WindowsStore `
-                -DCMAKE_SYSTEM_VERSION="10.0.22621.0" `  # Match main project's SDK version
+                -DCMAKE_SYSTEM_NAME="WindowsStore" `
+                -DCMAKE_SYSTEM_VERSION="10.0.22621.0" `  # Explicit Windows SDK version
+                -DSDL_UWP="ON" `
+                -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/dep/msvc/deps-x64" ..
 
-          # Build and install to ensure proper file structure
           cmake --build . --config Release --target install
 
-          # Verify files were installed correctly
-          $sdlIncludePath = "${{ github.workspace }}/dep/msvc/deps-x64/include/SDL2"
-          $sdlLibPath = "${{ github.workspace }}/dep/msvc/deps-x64/lib"
-          $sdlBinPath = "${{ github.workspace }}/dep/msvc/deps-x64/bin"
-    
-          if (-not (Test-Path "$sdlLibPath/SDL2.lib")) {
-          Write-Error "SDL2.lib not found in expected location!"
+          # Triple verification
+          echo "Verifying installation:"
+          ls -R "${{ github.workspace }}/dep/msvc/deps-x64"
+          if (-not (Test-Path "${{ github.workspace }}/dep/msvc/deps-x64/lib/SDL2.lib")) {
+          Write-Error "❌ Critical error: SDL2.lib missing!"
           exit 1
           }
+          Write-Host "✅ SDL2 installation verified" -ForegroundColor Green
         shell: pwsh
   
       - name: Add MSBuild to PATH
